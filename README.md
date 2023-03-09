@@ -89,9 +89,13 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?  
+- 0x7 : Class 3 frame received from nonassociated station
+- On spoof l'AP (grâce à son adresse MAC) en envoyant le code précédent. Normalement un AP envoie ce message s'il reçoit une frame de data de la part d'une STA non connectée.
 
-__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?  
+- Filtre : `(wlan.bssid == 76:53:e3:9d:42:51) && (wlan.fc.type_subtype == 0x000c)`
+- On a pu voir qu'ils avaient tous le même code car on envoie une dizaine de paquets du même type
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -100,9 +104,10 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+__Question__ : quels codes/raisons justifient l'envoi de la trame à la STA cible et pourquoi ?  
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+
+__Question__ : quels codes/raisons justifient l'envoi de la trame à l'AP et pourquoi ?
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
