@@ -1,0 +1,13 @@
+---
+titlepage: true
+titlepage-background: background5.pdf
+logo: heig-logo.png
+toc: true
+header-center: '\headerlogo'
+header-includes: |
+  ```{=latex}
+  \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+  \usepackage{lscape}
+  \newcommand{\headerlogo}{\raisebox{0pt}[0pt]{\includegraphics[width=1cm]{heig-logo.png}}}
+  ```
+...
