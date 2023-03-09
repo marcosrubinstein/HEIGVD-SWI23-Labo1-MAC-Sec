@@ -108,6 +108,10 @@ sudo airodump-ng --channel 1 wlan0mon
 ||
 (wlan.fc.type eq 0) && (wlan.fc.type_subtype eq 12)
 
+# Lancer des paquets de desauthentification avec aircrack
+# Cela va deauthentifier tous les clients connectés à cet AP
+sudo aireplay-ng -0 10 -a 6E:B8:9E:63:D2:51 wlan0mon
+
 ```
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
