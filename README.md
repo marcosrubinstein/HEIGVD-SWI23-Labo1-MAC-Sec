@@ -86,10 +86,37 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 | 39 | Requested from peer QSTA due to timeout                                                                                                                                              |
 | 40 | Peer QSTA does not support the requested cipher suite                                                                                                                                              |
 | 46-65535 | Reserved                                                                                                                                              |
+
+Setup:
+
+Nous avons créé le réseau wifi suivant pour nos tests:
+
+![Wifi setup](images/wifi_setup.png)
+
+```
+# démarrer l'interface en moniteur
+sudo airmon-ng start wlan0 
+
+# Fixer le canal utilisé 
+sudo airodump-ng --channel 1 wlan0mon 
+
+# Lancer wireshark sur l'interface wlan0mon avec les filtres suivants pour
+# afficher les trames de deauth:
+(wlan.fc.type == 0) && (wlan.fc.type_subtype == 0x0c)
+||
+(wlan.fc.type eq 0) && (wlan.fc.type_subtype eq 0x0c)
+||
+(wlan.fc.type eq 0) && (wlan.fc.type_subtype eq 12)
+
+```
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+
+Code 7 : Reason code: Class 3 frame received from nonassociated STA (0x0007)
+
+![Wifi setup](images/wireshark_deauth.png)
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
 
