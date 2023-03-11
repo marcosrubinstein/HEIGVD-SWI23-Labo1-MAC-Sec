@@ -120,20 +120,31 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 8 - Deauthenticated because sending STA is leaving BSS
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
-**TODO**
+
+Le code 1 : Car il ne spécifie pas la raison.
+
+Le code 4 : La STA est inactive depuis un certain temps et elle doit donc être déconnectée.
+
+Le code 5 : Envoyée à la STA car l'AP est surchargé et il ne peut pas associer de stations supplémentaires.
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
-**TODO**
+
+Le code 1 : Car il ne spécifie pas la raison.
+
+Le code 8 : Il est envoyé à l'AP car la STA quitte le réseau (BSS). Il est utilisé dans le cas où le réseau est surchargé et que l'AP doit déconnecter des clients et les rediriger vers un autre AP (load-balancing).
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+
 En envoyant un packet `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
 **TODO**
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
-**TODO**
+
+Comme dit précédemment le code 8 est plutôt utilisé lorsque le réseau est chargé de clients et donc l'AP va déconnecter certains clients et les redirigier vers un autre AP. Le code 3 ne propose pas de redirection vers un autre AP, il est plutôt utilisé lors d'une violation de sécurité.
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
-**TODO**
+
+On va pouvoir forcer la déconnection de clients qui se trouvent sur un AP, on va pouvoir le faire en forgeant une trame de deauthentification avec l'adresse MAC de la victime. De plus on pourra spécifier une raison à cette déconnection afin de la faire passer pour "normal".
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
