@@ -89,9 +89,28 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
+![Deauth aircrack](./images/deauth_aircrack_manip.png)
+
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
+De base, selon nos manipulations et analyses, le code utilisé et le `7 -  Class 3 frame received from nonassociated station`.
+
+Cela peut être utilisé pour des raisons légitimes, par exemple pour forcer une station à se connecter à un AP plus proche dans le cas ou une STA recoit une trame de données ou de gestion d'une station qui n'est pas connectée à l'AP.
+
+
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+
+Nous avons utilisé le filtre `(wlan.fc.type == 0) && (wlan.fc.type_subtype == 0x0c)` pour trouver les trames de déauthentification.
+
+Ce filtre Wireshark capture les trames Wi-Fi dont le type est de 0 (Management frames) et dont le sous-type est 0x0c (Beacon frame).
+
+On a effectivement trouvé d'autres trames de déauthentification, par exemple la suivante :
+
+![Deauth aircrack other random](./images/deauth_aircrack_other_random_deauth.png)
+
+qui contient le code `3 - Deauthenticated because sending STA is leaving IBSS or ESS`.
+
+Ici c'est probalement une station qui quitte le réseau local sans fil (WLAN) auquel elle était connectée. et qui notifie l'AP de son départ du réseau.
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -101,14 +120,20 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 8 - Deauthenticated because sending STA is leaving BSS
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+**TODO**
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+**TODO**
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+En envoyant un packet `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
+**TODO**
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
+**TODO**
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+**TODO**
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
