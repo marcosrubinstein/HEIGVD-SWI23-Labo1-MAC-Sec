@@ -144,7 +144,7 @@ Comme dit précédemment le code 8 est plutôt utilisé lorsque le réseau est c
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
-On va pouvoir forcer la déconnection de clients qui se trouvent sur un AP, on va pouvoir le faire en forgeant une trame de deauthentification avec l'adresse MAC de la victime. De plus on pourra spécifier une raison à cette déconnection afin de la faire passer pour "normal".
+On va pouvoir forcer la déconnexion de clients qui se trouvent sur un AP, on va pouvoir le faire en forgeant une trame de deauthentification avec l'adresse MAC de la victime. De plus on pourra spécifier une raison à cette déconnection afin de la faire passer pour "normal".
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
@@ -155,6 +155,7 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
 
 
 ### 3. SSID flood attack
@@ -192,8 +193,13 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+	
+Ces trames doivent être envoyées en clair car elles doivent être lisibles par les points d'accès à proximité pour que ceux-ci puissent répondre avec des trames Beacon.
+Si les trames probes étaient chiffrées, les points d'accès ne pourraient pas lire le contenu.
 
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pour les trames probes. Par conséquent on aurait beaucoup plus de peine à les tracer puisqu'on ne pourrait plus comparer les adresses MAC.
 
 
 ### 5. Détection de clients et réseaux
