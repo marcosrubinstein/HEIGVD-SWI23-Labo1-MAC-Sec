@@ -137,13 +137,26 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
+Code 1 : raison non spécifiée
+Code 4 : raison = inactivité de la station
+Code 5 : raison = l'AP n'es pas capable de gérer toutes les stations associées
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+
+Code 1 : raison non spécifiée
+Code 8 : raison = la station quitte le réseau
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
 En utilisant `FF:FF:FF:FF:FF:FF` comme adresse de station.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
+
+Le code 3 spécifie que la désauthntification a lieu parce que l'AP a reçu une trame de
+désauthentification de la station alors que le code 8 parce que la station
+quitte le réseau. Dans le code 3, la désauthentification est donc initiée par
+l'AP suite à une requête de la station alors que dans le code 8, la
+désauthentification est initié par la station, qui quitte le réseau.
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
