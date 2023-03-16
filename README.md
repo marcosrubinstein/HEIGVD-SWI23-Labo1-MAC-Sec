@@ -87,7 +87,7 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 | 40 | Peer QSTA does not support the requested cipher suite                                                                                                                                              |
 | 46-65535 | Reserved                                                                                                                                              |
 
-Setup:
+### Setup
 
 Nous avons créé le réseau wifi suivant pour nos tests:
 
@@ -103,9 +103,13 @@ sudo airodump-ng --channel 1 wlan0mon
 # Lancer wireshark sur l'interface wlan0mon avec les filtres suivants pour
 # afficher les trames de deauth:
 (wlan.fc.type == 0) && (wlan.fc.type_subtype == 0x0c)
-||
+
+ou
+
 (wlan.fc.type eq 0) && (wlan.fc.type_subtype eq 0x0c)
-||
+
+ou
+
 (wlan.fc.type eq 0) && (wlan.fc.type_subtype eq 12)
 
 # Lancer des paquets de desauthentification avec aircrack
@@ -136,6 +140,8 @@ __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cib
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+
+En utilisant `FF:FF:FF:FF:FF:FF` comme adresse de station.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
