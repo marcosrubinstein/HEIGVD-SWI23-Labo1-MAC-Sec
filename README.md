@@ -104,16 +104,39 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
-__Question__ : quels codes/raisons justifient l'envoi de la trame à la STA cible et pourquoi ?  
+__Question__ : quels codes/raisons justifient l'envoi de la trame à la STA cible et pourquoi ?
+
+Les codes 1, 4 et 5.
+
+- Code 1 Unspecified : Comme la raison n'est pas spécifiée, cette trame peut être destinée à l'AP ou à la STA.
+- Code 4 Disassociated due to inactivity : L'AP déconnecte la station car la station est inactive. Donc cette trame va à la station.
+- Code 5 Disassociated because AP is unable to handle all currently associated stations : L'AP déconnecte la station car il n'a pas assez de ressources pour gérer toutes les stations. Donc cette trame va à la station.
+
 
 
 __Question__ : quels codes/raisons justifient l'envoi de la trame à l'AP et pourquoi ?
 
+- Code 1 Unspecified : Comme la raison n'est pas spécifiée, cette trame peut être destinée à l'AP ou à la STA.
+- Code 8 Deauthenticated because sending STA is leaving BSS : La station se déconnecte de l'AP car elle quitte le réseau. Donc cette trame va à l'AP.
+
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+
+On peut spécifier une adresse de broadcast pour l'adresse de destination de la trame, avec par exemple le code 4 ou 5.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
+Le code 3 signifie que la station quitte l'IBSS ou l'ESS.
+Un IBSS est un réseau en mode AD hoc. Un ESS est un réseau en mode infrastructure qui peut être composé de plusieurs BSS.
+Donc avec le code 3, la station quitte vraiment le réseau.
+
+Le code 8 signifie que la station quitte le BSS. Donc la station se déconnecte de l'AP mais peut rester dans l'IBSS.
+
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+Dans le cas d'un paquet de deauthentication envoyé à la station, la station croit qu'elle a été déconnectée de l'AP.
+Dans le cas d'un paquet de deauthentication envoyé à l'AP, l'AP croit que la station s'est déconnectée.
+
+Dans les deux cas, la station est déconnectée du réseau.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
