@@ -118,6 +118,8 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
+> ![](images/deauth_script.png)
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
 > Les codes 1 et 4 sont envoyés de l'AP vers la station. Ce sont des codes qui permettent à un AP de déconnecter des clients.
@@ -157,6 +159,8 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+> ![](images/ssid_flood_script.png)
 
 
 ## Partie 2 - probes
