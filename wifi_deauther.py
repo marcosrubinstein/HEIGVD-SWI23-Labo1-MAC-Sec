@@ -19,7 +19,7 @@ def choose_reason():
         for r in reasons:
             print(r, reasons[r])
 
-        chosen = input("Choose reason:\n$:")
+        chosen = input("Choose reason:")
 
     return chosen
 
@@ -81,19 +81,13 @@ def main():
     # Take action depending on reason
     match(reason):
         case "1": 
-            print(f'AP: {ap}')
-            print(f'STA: {sta}')
-            spoof_message_to_sta(ap, sta, 1, interface)
-            
+            spoof_message_to_sta(ap, sta, 1, interface)   
         case "4":
-            spoof_message_to_sta(ap, sta, 4, interface)
-            
+            spoof_message_to_sta(ap, sta, 4, interface)  
         case "5":
-            spoof_message_to_ap(ap, sta, 5, interface)
-            
+            spoof_message_to_ap(ap, sta, 5, interface)   
         case "8":
-            spoof_message_to_ap(ap, sta, 8, interface)
-            
+            spoof_message_to_ap(ap, sta, 8, interface)  
         case _:
             print("Impossible reason")
             exit()
