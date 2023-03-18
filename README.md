@@ -137,7 +137,7 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
-Code 1 : raison non spécifiée
+Code 1 : raison = non spécifiée
 Code 4 : raison = inactivité de la station
 Code 5 : raison = l'AP n'es pas capable de gérer toutes les stations associées
 
@@ -159,6 +159,12 @@ l'AP suite à une requête de la station alors que dans le code 8, la
 désauthentification est initié par la station, qui quitte le réseau.
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+Cette attaque permet de déconnecter une cible d'un réseau wifi. En répétant la
+desauthentification il est donc possible de rendre un réseau wifi inutilisable 
+pour une cible. L'avantage de cette attaque est qu'elle est extrêmement simple à
+mettre en place et ne nécessite pas d'équipement ou de logiciel sophistiqué, ni
+d'être authentifié dans le réseau.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
