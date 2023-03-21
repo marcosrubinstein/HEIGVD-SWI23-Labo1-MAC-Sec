@@ -169,6 +169,7 @@ Nous avons fait quelques tests avec un partage de connexion Android (AndroidAP),
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+Le script est disponible [ici](./customScripts/SSID_flood.py). On peut soit passer un fichier txt contenant un nom par ligne, soit utiliser le script sans liste. A ce moment l'utilisateur doit entrer un nombre d'AP à créer, les noms et adresses MAC sont générés aléatoirement à l'aide de la librairie Faker de python (https://faker.readthedocs.io/en/master/#basic-usage)
 	
 Exemple de fonctionnement avec une liste fournie par l'utlisateur.
 ![SSID flooding avec liste fournie par l'utilisateur](images/floodWithList.png)
