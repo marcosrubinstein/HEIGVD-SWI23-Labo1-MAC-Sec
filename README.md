@@ -101,7 +101,7 @@ sudo aireplay-ng -0 3 -a a6:dc:44:80:84:73 -c 14:4f:8a:2f:82:08 wlan1mon
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
-> Le code utilisé par Aircrack est le 7
+> Le code utilisé par Aircrack est le 7: le client a tenté de transmettre des données avec d'être associé avec l'AP.
 >
 > ![](images/deauth_reason.png)
 

