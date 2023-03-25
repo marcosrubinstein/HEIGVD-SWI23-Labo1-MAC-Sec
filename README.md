@@ -166,6 +166,12 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+```bash
+iwlist wlp3s0 scan
+```
+
+![iwlist_wlp3s0_scan](images/iwlist_wlp3s0_scan.png)
+
 
 ### 3. SSID flood attack
 

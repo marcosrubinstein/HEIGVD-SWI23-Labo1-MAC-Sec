@@ -1,0 +1,125 @@
+wlp3s0    Scan completed :
+# Real beacon
+          Cell 05 - Address: 50:6F:0C:EC:2F:B9
+                    Channel:1
+                    Frequency:2.412 GHz (Channel 1)
+                    Quality=49/70  Signal level=-61 dBm  
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
+                              9 Mb/s; 12 Mb/s; 18 Mb/s
+                    Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
+                    Mode:Master
+                    Extra:tsf=000004a3492f0778
+                    Extra: Last beacon: 6876ms ago
+                    IE: Unknown: 001553756E726973655F322E3447487A5F454332464230
+                    IE: Unknown: 010882848B960C121824
+                    IE: Unknown: 030101
+                    IE: Unknown: 0706434820010D14
+                    IE: Unknown: 200100
+                    IE: Unknown: 480100
+                    IE: Unknown: 4A0E14000A00C800C800140005001900
+                    IE: Unknown: C3020028
+                    IE: Unknown: 2A0100
+                    IE: Unknown: 2D1A2D0017FFFFFFFFFEFFFFFFFF1F000001000000000018E6E71900
+                    IE: Unknown: 3D1601000400000000000000000000000000000000000000
+                    IE: Unknown: 32043048606C
+                    IE: Unknown: DD180050F2020101840003A4770127A400004243770162327701
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+                    IE: WPA Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+                    IE: Unknown: 7F0A01000002000000400000
+                    IE: Unknown: DD8D0050F204104A00011010440001021057000101103B000103104700106931FAC9DAB2B36C248B87D6AE33F9A6102100095175616E74656E6E6110230005706561726C1024000B515352313047552E353630104200035143531054000800060050F2040001101100105265666572656E63652044657369676E100800022008103C0001011049000600372A000120
+                    IE: Unknown: BF0C9278C33FAAFF0000AAFF0000
+                    IE: Unknown: C005000000FCFF
+                    IE: Unknown: FF1623010008124000002002C000035C00000C00AAFFAAFF
+                    IE: Unknown: FF0A24F47F0032FCFF000000
+                    IE: Unknown: FF0327050A
+                    IE: Unknown: FF0E26240000FF2000FF4000FF6000FF
+                    IE: Unknown: DD22002686010300DD00000032005A4B006E0232628E2B68000000070000000040000FFF
+# Fake Beacon
+          Cell 24 - Address: FA:8E:82:6F:69:70
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=67/70  Signal level=-43 dBm  
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Mode:Master
+                    Extra:tsf=0000000000000000
+                    Extra: Last beacon: 6888ms ago
+                    IE: Unknown: 001553756E726973655F322E3447487A5F454332464230
+                    IE: Unknown: 030107
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : Proprietary
+                        Pairwise Ciphers (514) :          Cell 25 - Address: 40:B3:FC:81:0F:E9
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=66/70  Signal level=-44 dBm  
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Mode:Master
+                    Extra:tsf=0000000000000000
+                    Extra: Last beacon: 6788ms ago
+                    IE: Unknown: 001553756E726973655F322E3447487A5F454332464230
+                    IE: Unknown: 030107
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : Proprietary
+                        Pairwise Ciphers (514) :          Cell 26 - Address: 7B:E3:16:18:04:4E
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=56/70  Signal level=-54 dBm  
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Mode:Master
+                    Extra:tsf=0000000000000000
+                    Extra: Last beacon: 6684ms ago
+                    IE: Unknown: 001553756E726973655F322E3447487A5F454332464230
+                    IE: Unknown: 030107
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : Proprietary
+                        Pairwise Ciphers (514) :          Cell 27 - Address: A0:B5:49:7B:03:08
+                    Channel:11
+                    Frequency:2.462 GHz (Channel 11)
+                    Quality=24/70  Signal level=-86 dBm  
+                    Encryption key:on
+                    ESSID:"edx-52342"
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 18 Mb/s
+                              24 Mb/s; 36 Mb/s; 54 Mb/s
+                    Bit Rates:6 Mb/s; 9 Mb/s; 12 Mb/s; 48 Mb/s
+                    Mode:Master
+                    Extra:tsf=00000015db17cb7d
+                    Extra: Last beacon: 5972ms ago
+                    IE: Unknown: 00096564782D3532333432
+                    IE: Unknown: 010882848B962430486C
+                    IE: Unknown: 03010B
+                    IE: Unknown: 050400030000
+                    IE: Unknown: 0706444520010D14
+                    IE: Unknown: 200100
+                    IE: Unknown: 23021100
+                    IE: Unknown: 2A0104
+                    IE: Unknown: 32040C121860
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : CCMP
+                        Pairwise Ciphers (1) : CCMP
+                        Authentication Suites (1) : PSK
+                    IE: Unknown: 0B050100660000
+                    IE: Unknown: 33028164
+                    IE: Unknown: 4605334F000000
+                    IE: Unknown: 3B0404040B0C
+                    IE: Unknown: 2D1AEF1917FFFFFF0000000000000000000000000000000000000000
+                    IE: Unknown: 3D160B080000000000000000000000000000000000000000
+                    IE: Unknown: 4A0E14000A002C01C800140005001900
+                    IE: Unknown: 7F0985000800000000C001
+                    IE: Unknown: FF1C23010008120010222002C00F42951000CC00EAFFEAFF1A1CC7711C07
+                    IE: Unknown: FF072404000115FCFF
+                    IE: Unknown: FF0E260000A40820A408404308603208
+                    IE: Unknown: DD220050F204104A00011010440001021057000101103C0001031049000600372A000120
+                    IE: Unknown: DD1A00904C0418BF0CB1698A0FEAFF0000EAFF0020C005000B000000
+                    IE: Unknown: DD090010180201001C0000
+                    IE: Unknown: DD180050F2020101000003A4000027A4000042435E0062322F00
+   
