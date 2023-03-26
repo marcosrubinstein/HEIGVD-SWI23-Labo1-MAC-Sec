@@ -225,6 +225,21 @@ __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils p
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
+5_detec.py
+
+```
+from scapy.all import *
+
+ssid = input("Entrez le ssid recherché: ")
+
+def packet_handler(packet):
+    if packet.haslayer(Dot11ProbeReq) and packet.info.decode('utf-8') == ssid:
+        print("STA '{}' cherche AP '{}'".format(packet.addr2, ssid))
+
+print("Sniffing en cours....")
+sniff(iface="wlan0mon", prn=packet_handler)
+```
+
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
