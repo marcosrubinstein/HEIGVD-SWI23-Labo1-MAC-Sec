@@ -166,11 +166,33 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+Lors des premiers essaies, l'adresse MAC n'était pas spoofée. Nous avons intégré le changement d'adresse MAC sur l'interface directement dans le script. De cette façon, nous nous faisons réellement passé pour le beacon d'origine.
+
+Nous pouvons, depuis une victime, lister les AP environnant avec la commande suivate:
+
 ```bash
 iwlist wlp3s0 scan
 ```
 
-![iwlist_wlp3s0_scan](images/iwlist_wlp3s0_scan.png)
+Nous voyons que la victime détecte bien 2 fois le même AP (même SSID et BSSID)
+
+![iwlist_wlp3s0_scan](images/iwlist_clean.png)
+
+Si on observer le trafic wireshark, nous voyons les échanges et packets suivants:
+![ex_1_2_wireshark](images/ex_1_2_wireshark.png)
+
+![ex_1_2_conversations](images/ex_1_2_conversations.png)
+
+Nous voyons que des paquets nous parviennent.
+
+Quelques observations:
+
+* Initialement, le client était sur le réseau 5GHz, et lorsque l'attaque était en cours, le réseau 2.4GHz ne s'affichait pas.
+  Lorsque l'attaque a été arrêtée, le réseau s'affichait à nouveau. Cela peut être une coïncidence, ou alors l'appareil n'arrivait pas à déterminer le canal à utiliser.
+* Le channel est constant, il reste sur le channel 1 bien que l'antenne servant à l'attaque (canal 7) soit bien plus proche
+  Cela peut être dû à la configuration wifi
+* Le connexion semble plus lente lorsque l'attaque est en cours, ce qui ne correspond pas à l'affirmation ci-dessus comme quoi le canal ne change pas
+
 
 
 ### 3. SSID flood attack
@@ -209,7 +231,12 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+Tout le monde peut lire ces trames car aucune connexion n'est établie avec l'AP comme ce dernier est inconnu.
+De ce fait, on ne peut pas chiffrer car le destinataire ne saurait pas comment déchiffrer.
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+Les appareils récents spoof leurs adresses MAC à la volée ce qui fait qu'elle change régulièrement.
+Comme c'est l'adresse MAC qui sert à tracer les dispositifs, il n'y a pas moyen de déterminer que 2 adresses MAC différentes correspondent en réalité au même appareil.
 
 
 ### 5. Détection de clients et réseaux
