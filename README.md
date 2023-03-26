@@ -176,6 +176,11 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+En prenant par exemple le réseau "ABC" présent sur le canal 6 où est connecté
+Bob, cette attaque va émettre un beacon annonçant que le réseau "ABC" est sur le
+canal 12. Cela aura pour effet que l'ordinateur de bob va tenter de se connecter
+au réseau "ABC" sur le canal 12 alors qu'il n'existe pas sur ce canal. Cela
+provoquera des déconnexions du vrai réseau.
 
 ### 3. SSID flood attack
 
