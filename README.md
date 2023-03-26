@@ -91,11 +91,17 @@ a) Utiliser la fonction de déauthentification de la suite aircrack, capturer le
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
-commande: aireplay-ng -0 0 -a 66:03:7F:C1:D2:A7 wlan0
+commande utilisé:
+
+	aireplay-ng -0 0 -a 66:03:7F:C1:D2:A7 wlan0
 	
-code 7:  Class 3 frame received from nonassociated station 
+Le code 7 est utilisé. Il indique "Class 3 frame received from nonassociated station". Ce qui veut dire que le client essaye d'envoyer des données avant qu'il ne soit associé.
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+
+Filtre utilisé dans Wireshark: wlan.fixed.reason_code != 0x0007
+
+Oui il y avait des trames avec le code 6 "Class 2 frame received from nonauthenticated station". Cela est lié à la commande aireplay-ng de la question précédente. Ce code signifie que l'AP est en train de se faire attaquer.
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -106,13 +112,29 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
+Code 1 : La raison de l'envoi à la STA
+
+Code 4 : La STA est inactive donc il faut la déconnecter
+
+Code 5 : L'AP est surchargé et incapable de répondre aux tentatives de connexions actuelles
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+
+Code 1: La raison de l'envoi à l'AP.
+
+Code 8: La station quitte son BSS.
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
+En utilisant l'adresse MAC FF:FF:FF:FF:FF:FF ou en précisant rien.
+
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
+Le Code 3 dit que le client est désauthentifié et quitte l'ESS. Avec le Code 8 le client va être désassocié du BSS par un AP.
+
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+L'attaque permet de déconnecter l'hôte cible (ou tous les clients) de l'AP auquel il était connecté. Il ne sera pas possible de pouvoir accéder à internet donc il sera obligé de se reconnecter.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
