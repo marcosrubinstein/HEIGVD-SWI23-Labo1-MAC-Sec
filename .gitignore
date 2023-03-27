@@ -1,5 +1,7 @@
 .DS_Store
 .vscode
+panDF.sh
+.pandoc/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
