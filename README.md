@@ -89,7 +89,7 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+__Question : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?__
 
 commande utilisé:
 
@@ -97,7 +97,7 @@ commande utilisé:
 	
 Le code 7 est utilisé. Il indique "Class 3 frame received from nonassociated station". Ce qui veut dire que le client essaye d'envoyer des données avant qu'il ne soit associé.
 
-__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+__Question: A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?__
 
 Filtre utilisé dans Wireshark: wlan.fixed.reason_code != 0x0007
 
@@ -110,29 +110,37 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+## Script
 
-Code 1 : La raison de l'envoi à la STA
+Pour lancer le script: sudo python3 deauthAttack.py
+Pour tester il faut changer le nom de l'interface, l'adresse MAC de l'AP et l'adresse MAC de la station.
+
+![Script 1](images/1-deauth.png)
+
+
+__Question : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?__
+
+Code 1 : La raison de l'envoi n'est pas spécifié.
 
 Code 4 : La STA est inactive donc il faut la déconnecter
 
 Code 5 : L'AP est surchargé et incapable de répondre aux tentatives de connexions actuelles
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+__Question : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?__
 
-Code 1: La raison de l'envoi à l'AP.
+Code 1: La raison de l'envoi n'est pas spécifié.
 
 Code 8: La station quitte son BSS.
 
-__Question__ : Comment essayer de déauthentifier toutes les STA ?
+__Question : Comment essayer de déauthentifier toutes les STA ?__
 
-En utilisant l'adresse MAC FF:FF:FF:FF:FF:FF ou en précisant rien.
+En utilisant l'adresse MAC FF:FF:FF:FF:FF:FF de broadcast.
 
-__Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
+__Question : Quelle est la différence entre le code 3 et le code 8 de la liste ?__
 
 Le Code 3 dit que le client est désauthentifié et quitte l'ESS. Avec le Code 8 le client va être désassocié du BSS par un AP.
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
+__Question : Expliquer l'effet de cette attaque sur la cible__
 
 L'attaque permet de déconnecter l'hôte cible (ou tous les clients) de l'AP auquel il était connecté. Il ne sera pas possible de pouvoir accéder à internet donc il sera obligé de se reconnecter.
 
@@ -144,7 +152,7 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Permettre à l'utilisateur de choisir le réseau à attaquer
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
+__Question : Expliquer l'effet de cette attaque sur la cible__
 
 
 ### 3. SSID flood attack
@@ -181,9 +189,9 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
-__Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+__Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?__
 
-__Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+__Question : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?__
 
 
 ### 5. Détection de clients et réseaux
