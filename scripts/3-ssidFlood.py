@@ -1,5 +1,7 @@
 
 from scapy.layers.dot11 import *
+from faker import Faker
+
 
 INTERFACE = "wlan0"
 
