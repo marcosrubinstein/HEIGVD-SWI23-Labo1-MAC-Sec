@@ -18,7 +18,9 @@ On utilise `aireplay-ng` pour déauthentifier un client 802.11. Le code utilisé
 > A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
 
 Les trames de déauthentification que nous avons trouvées sont les suivantes :
+
 ![deauth_trames](images/deauth_trames.png)
+
 Le code 6 signifie que la STA a reçu une trame de déauthentification de la part de l'AP. La STA a donc été déconnectée de l'AP.
 
 ### Question b)
