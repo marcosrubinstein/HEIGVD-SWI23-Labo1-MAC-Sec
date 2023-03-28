@@ -3,6 +3,9 @@
 # Authors     : Géraud SILVESTI, Alexandre JAQUIER, Francesco MONTI
 # Date        : 28.03.2023
 # Usage       : 2_fakechannel.py
+# Source      : https://www.binarytides.com/python-packet-sniffer-code-linux/
+#               https://pypi.org/project/texttable/
+#               https://www.thepythoncode.com/article/building-wifi-scanner-in-python-scapy
 
 from scapy.all import Dot11Beacon, Dot11Elt, RadioTap, Dot11, sendp, sniff
 import texttable as text_t
