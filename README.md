@@ -89,6 +89,10 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
+*Utilisation du script*
+
+![img.png](images/img.png)
+
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?  
 - 0x7 : Class 3 frame received from nonassociated station
 - On spoof l'AP (grâce à son adresse MAC) en envoyant le code précédent. Normalement un AP envoie ce message s'il reçoit une frame de data de la part d'une STA non connectée.
@@ -182,6 +186,9 @@ Nous allons nous intéresser dans cet exercice à la création d'un evil twin po
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
+
+*Utilisation du script*
+![img_1.png](images/img_1.png)
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
