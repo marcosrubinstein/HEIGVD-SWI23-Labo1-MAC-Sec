@@ -228,6 +228,7 @@ Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pou
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
 Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).
+	
 ![Exemple du fonctionnement du script](images/stationsLister.png)
 	
 Le script liste simplement les stations qui recherchent le SSID "AndroidAP".
@@ -243,6 +244,7 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 	
 Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)).
+	
 ![Exemple du fonctionnement du script](images/linksStationsAndAPs.png)
 	
 Le script liste les stations et l'AP auxquelles ces dernières sont connectées.
