@@ -206,10 +206,11 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 	
-Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)
+Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).
 ![Exemple du fonctionnement du script](images/probe_evil.png)
 	
 Afin de montrer le bon fonctionnement du script, le "faux réseau" créé lors de la détection de probe-request cherchant le SSID "AndroidAP" est nommé AndroidAPfaked. Il est évident que dans le cas d'une réelle attaque, le nom du "faux réseau" doit être le même que le vrai.
+On voit sur la capture d'écran que des Probe Requests sont envoyées à la recherche du SSID "AndroidAP". A ce moment, on peut voir que le faux réseau (AndroidAPfaked) est créé à droite dans la liste des wifis détectés par une machine Windows.
 	
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
