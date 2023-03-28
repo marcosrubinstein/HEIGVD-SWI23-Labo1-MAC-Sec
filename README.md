@@ -5,14 +5,22 @@
 __A faire en équipes de deux personnes__
 
 
-1. [Deauthentication attack](#1-deauthentication-attack)
-2. [Fake channel evil tween attack](#2-fake-channel-evil-tween-attack)
-3. [SSID Flood attack](#3-ssid-flood-attack)
-4. [Probe Request Evil Twin Attack](#4-probe-request-evil-twin-attack)
-5. [Détection de clients et réseaux](#5-d%c3%a9tection-de-clients-et-r%c3%a9seaux)
-6. [Hidden SSID reveal](#6-hidden-ssid-reveal)
-7. [Livrables](#livrables)
-8. [Échéance](#%c3%89ch%c3%a9ance)
+- [Sécurité des réseaux sans fil](#sécurité-des-réseaux-sans-fil)
+	- [Laboratoire 802.11 sécurité MAC](#laboratoire-80211-sécurité-mac)
+		- [Pour cette partie pratique, vous devez être capable de :](#pour-cette-partie-pratique-vous-devez-être-capable-de-)
+	- [Quelques pistes utiles avant de commencer :](#quelques-pistes-utiles-avant-de-commencer-)
+	- [Partie 1 - beacons, authenfication](#partie-1---beacons-authenfication)
+		- [1. Deauthentication attack](#1-deauthentication-attack)
+	- [Script](#script)
+		- [2. Fake channel evil tween attack](#2-fake-channel-evil-tween-attack)
+		- [3. SSID flood attack](#3-ssid-flood-attack)
+	- [Partie 2 - probes](#partie-2---probes)
+	- [Introduction](#introduction)
+		- [4. Probe Request Evil Twin Attack](#4-probe-request-evil-twin-attack)
+		- [5. Détection de clients et réseaux](#5-détection-de-clients-et-réseaux)
+		- [6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)](#6-hidden-ssid-reveal-exercices-challenge-optionnel---donne-droit-à-un-bonus)
+	- [Livrables](#livrables)
+	- [Échéance](#échéance)
 
 
 
@@ -191,8 +199,13 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 __Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?__
 
+Chiffrer les trames *Probe Request* n'aurait tout simplement pas de sens. En effet, ces trames sont faites pour vérifier l'existance d'un réseau avec un SSID donné dans les parages, or chiffrer le paquet ferait qu'un éventuel AP qui offre ce SSID ne pourrait potentiellement pas le comprendre.
+
+Par exemple, imaginons un client qui s'est connecté par le passé au réseau "ABC" avec pour mot de passe "123". Si l'AP qui propose ce réseau Wifi change de mot de passe à "456", alors le paquet de *Probe Request* chiffré avec "123" fait qu'il ne pourra pas être déchiffré par l'AP.
+
 __Question : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?__
 
+Tout simplement parce que l'adresse MAC utilisée par ces appareils n'est plus fixe. Lors de la connexion à un AP, ces appareils choisissent une adresse MAC aléatoire parmi un lot définit. La seule information que peut déduire un attaquant sniffant le réseau est qu'il y a des machines de types Android ou iPhone qui sont connectés au réseau sniffé, mais rien de plus.
 
 ### 5. Détection de clients et réseaux
 
