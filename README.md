@@ -225,7 +225,9 @@ __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils p
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
-5_detec.py
+Réponse: 
+
+Script: scripts/5_detec.py
 
 ```
 from scapy.all import *
@@ -240,6 +242,19 @@ print("Sniffing en cours....")
 sniff(iface="wlan0mon", prn=packet_handler)
 ```
 
+Exécution du script:
+
+La fonction airodump nous montre le réseau 'SWI' présent sur le canal 3:
+
+![Résultat airodump](images/5_a_airodump.png)
+
+On lance ensuite notre script, pendant lequel on connecte un appareil au réseau
+SWI:
+
+![Script](images/5_a_script_res.png)
+
+On constate que notre script détecte la recherche du réseau par l'appareil.
+
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
@@ -249,6 +264,56 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 9C:F3:87:34:3C:CB &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 00:6B:F1:50:48:3A
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
+
+Réponse: 
+
+Script: scripts/5_b_detec.py
+
+```
+from scapy.all import *
+
+# Liste des STA assocée aux AP
+ap_sta_list = []
+
+# Fonction appelée pour traiter chaque paquet
+def handle_packet(pkt):
+    # Si le paquet = données
+    if pkt.type == 2:
+        # si le bit toDS est à 1 et fromDS à 0
+        # c'est à dire si le paquet est destiné à une AP
+        # source: https://stackoverflow.com/questions/52981542/python-scapy-distinguish-between-acesspoint-to-station
+        DS = pkt.FCfield & 0x3
+        toDS = DS & 0x01 != 0
+        fromDS = DS & 0x02 != 0
+
+        if toDS and not fromDS:
+            ap_sta = (pkt.addr2, pkt.addr1)
+
+            # Ajout de la pair ap sta dans la liste si pas deja présente
+            if ap_sta not in ap_sta_list:
+                ap_sta_list.append(ap_sta)
+                print(ap_sta_list[-1][0].upper() + "\t" + ap_sta_list[-1][1].upper())
+
+def main():
+    print("Sniffing en cours...")
+    print("STAs \t\t\t APs")
+    sniff(iface='wlan0mon', prn=handle_packet)
+
+if __name__ == "__main__":
+    main()
+```
+
+Exécution du script:
+
+La fonction airodump nous montre les stations associées aux APs. Elle nous
+permettra de comparer les résultats de notre script :
+
+![Résultat airodump](images/5_b_airodump.png)
+
+On lance ensuite notre script qui affiche aussi les stations associés aux APs et
+on peut constater que les résultats sont similaires :
+
+![Script](images/5_b_script_res.png)
 
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
