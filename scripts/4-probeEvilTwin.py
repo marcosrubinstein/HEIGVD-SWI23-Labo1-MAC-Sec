@@ -1,7 +1,7 @@
 
 from scapy.layers.dot11 import *
 
-INTERFACE = "wlp0s20f3mon"      # Interface to use
+INTERFACE = "wlan0"             # Interface to use
 AP_MAC = "11:22:33:44:55:66"    # MAC address of the fake access point
 SSID = "HEIG-VD"                # Probe Requests to answer to
 
@@ -25,10 +25,6 @@ def targeted_evil_twin(pkt):
 
             # Send the frame
             sendp(frame, iface=INTERFACE, verbose=0)
-
-            
-                
-
 
 if __name__ == '__main__':
     # Sniff network

