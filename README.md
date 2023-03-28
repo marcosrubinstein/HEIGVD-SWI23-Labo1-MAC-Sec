@@ -185,7 +185,13 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+Ces trames sont faites pour être envoyées alors que la connexion entre l'AP et la STA n'est pas encore établie. Donc elles ne peuvent pas être chiffrées.	
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+D'une part sur les téléphones récents l'adresse MAC utilisée est aléatoire.
+
+D'autre part, les téléphones récents n'envoient plus de probe request spontanément. Par exemple mon téléphone (Android 12) n'envoie pas de probe request la plupart du temps. C'est seulement quand j'effectue manuellement une recherche de wifi que le téléphone envoie un probe request.
 
 
 ### 5. Détection de clients et réseaux
