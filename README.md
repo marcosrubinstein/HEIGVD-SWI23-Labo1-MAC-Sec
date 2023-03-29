@@ -162,6 +162,9 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question : Expliquer l'effet de cette attaque sur la cible__
 
+Le but de cette attaque est d'observer les SSID disponibles afin d'en choisir un, de créer un faux beacon sur un canal différent et de le diffuser. L'AP va alors changer de canal pour se mettre sur le même canal que le faux beacon. Le client va alors se connecter au faux beacon et on pourra récupérer les informations de connexion.
+
+![Script 2](images/2-evilTween.png)
 
 ### 3. SSID flood attack
 
@@ -217,6 +220,8 @@ Tout simplement parce que l'adresse MAC utilisée par ces appareils n'est plus f
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
+![Script 5 a](images/5-a-sniff.png)
+
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
@@ -227,7 +232,7 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
-![Script 5](images/5-sniff.png)
+![Script 5 b](images/5-b-sniff.png)
 
 
 
@@ -237,7 +242,8 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
-
+La solution agit en deux temps. On récupère d'abord la liste des SSID cachés en utilisant la trame *Probe Request* avec le SSID vide. Ensuite, on envoie une trame *Probe Request* avec le SSID de chaque SSID caché trouvé. 
+Si l'AP répond à la trame, alors on a trouvé le SSID caché.
 
 ## Livrables
 
