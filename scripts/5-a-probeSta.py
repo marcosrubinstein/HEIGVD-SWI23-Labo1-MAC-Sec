@@ -1,8 +1,8 @@
 
 from scapy.layers.dot11 import *
 
-INTERFACE = "wlp0s20f3mon"             # Interface to use
-SSID = "netplus-1ee13f"                # Probe Requests to answer to
+INTERFACE = "wlx00c0ca6b5921"   # Interface to use
+SSID = "HEIG-VD"                # Probe Requests to answer to
 
 # Method to offer an evil twin for a particular SSID
 def probe_sniff(pkt):
