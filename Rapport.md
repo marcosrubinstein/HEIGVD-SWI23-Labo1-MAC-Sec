@@ -115,5 +115,5 @@ Si un appareil se connecte à un réseau caché, il va envoyer une trame _Probe 
 
 *Script* : [hidden_ssid.py](scripts/6_hiddenssid.py)
 
-## Annexe
+# Annexe
 Tous les scripts sont disponibles dans le dossier [scripts](scripts/). Un environnement conda à été utilisé pour l'installation des dépendances. Le fichier [environment.yml](scripts/environment.yml) contient les dépendances utilisées.
