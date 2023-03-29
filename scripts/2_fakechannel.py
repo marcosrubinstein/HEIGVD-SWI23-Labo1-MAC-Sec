@@ -10,12 +10,6 @@
 from scapy.all import Dot11Beacon, Dot11Elt, RadioTap, Dot11, sendp, sniff
 import texttable as text_t
 
-bssid_list = []
-packet_list = []
-ap_list = []
-
-
-
 # Recherche d'un paquet Beacon afin de pouvoir extraire les informations nécessaires
 def SSID_finder(packet):
     # On check que la trame est de type "beacon"
@@ -73,7 +67,7 @@ def forge_beacon(packet):
 
 
 # Affichage des informations sous forme de table
-def display_texttable(list):
+def display_list(list):
     table = text_t.Texttable()
     table.set_deco(text_t.Texttable.HEADER)
     table.set_cols_dtype(['i','t','t','t','t']) 
@@ -86,11 +80,16 @@ def display_texttable(list):
         table.add_row([i, info[0], info[1], info[2], info[3]])
     print(table.draw())
 
-interface_to_check = input("Nom de l'interface : ")
-print("Interface selectionnée : " + interface_to_check)
-sniff(iface=interface_to_check , prn=SSID_finder, timeout=10)
-display_texttable(ap_list)
+if __name__ == "__main__":
+    bssid_list = []
+    packet_list = []
+    ap_list = []
 
-SSID_select = input("Numero du SSID à modifier : ")
-print("No choisi : " + SSID_select)
-forge_beacon(packet_list[int(SSID_select)-1])
+    interface_to_check = input("Nom de l'interface : ")
+    print("Interface selectionnée : " + interface_to_check)
+    sniff(iface=interface_to_check , prn=SSID_finder, timeout=10)
+    display_list(ap_list)
+
+    SSID_select = input("Numero du SSID à modifier : ")
+    print("No choisi : " + SSID_select)
+    forge_beacon(packet_list[int(SSID_select)-1])

