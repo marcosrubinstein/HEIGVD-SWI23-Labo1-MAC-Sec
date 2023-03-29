@@ -162,7 +162,7 @@ Avant l'attaque, le Wifi n'a pas une bonne portée :
 ![Avant](images/2_a.png)
 
 Après l'attaque, le Wifi a été créé (depuis le dongle) et a une bonne portée (vision de la machine hôte) :
-![Après](images/2_a.png)
+![Après](images/2_b.png)
 
 ### 3. SSID flood attack
 
