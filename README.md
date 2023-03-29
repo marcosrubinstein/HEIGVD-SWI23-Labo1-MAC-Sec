@@ -5,14 +5,22 @@
 __A faire en équipes de deux personnes__
 
 
-1. [Deauthentication attack](#1-deauthentication-attack)
-2. [Fake channel evil tween attack](#2-fake-channel-evil-tween-attack)
-3. [SSID Flood attack](#3-ssid-flood-attack)
-4. [Probe Request Evil Twin Attack](#4-probe-request-evil-twin-attack)
-5. [Détection de clients et réseaux](#5-d%c3%a9tection-de-clients-et-r%c3%a9seaux)
-6. [Hidden SSID reveal](#6-hidden-ssid-reveal)
-7. [Livrables](#livrables)
-8. [Échéance](#%c3%89ch%c3%a9ance)
+- [Sécurité des réseaux sans fil](#sécurité-des-réseaux-sans-fil)
+	- [Laboratoire 802.11 sécurité MAC](#laboratoire-80211-sécurité-mac)
+		- [Pour cette partie pratique, vous devez être capable de :](#pour-cette-partie-pratique-vous-devez-être-capable-de-)
+	- [Quelques pistes utiles avant de commencer :](#quelques-pistes-utiles-avant-de-commencer-)
+	- [Partie 1 - beacons, authenfication](#partie-1---beacons-authenfication)
+		- [1. Deauthentication attack](#1-deauthentication-attack)
+	- [Script](#script)
+		- [2. Fake channel evil tween attack](#2-fake-channel-evil-tween-attack)
+		- [3. SSID flood attack](#3-ssid-flood-attack)
+	- [Partie 2 - probes](#partie-2---probes)
+	- [Introduction](#introduction)
+		- [4. Probe Request Evil Twin Attack](#4-probe-request-evil-twin-attack)
+		- [5. Détection de clients et réseaux](#5-détection-de-clients-et-réseaux)
+		- [6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)](#6-hidden-ssid-reveal-exercices-challenge-optionnel---donne-droit-à-un-bonus)
+	- [Livrables](#livrables)
+	- [Échéance](#échéance)
 
 
 
@@ -89,9 +97,19 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+__Question : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?__
 
-__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+commande utilisé:
+
+	aireplay-ng -0 0 -a 66:03:7F:C1:D2:A7 wlan0
+	
+Le code 7 est utilisé. Il indique "Class 3 frame received from nonassociated station". Ce qui veut dire que le client essaye d'envoyer des données avant qu'il ne soit associé.
+
+__Question: A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?__
+
+Filtre utilisé dans Wireshark: wlan.fixed.reason_code != 0x0007
+
+Oui il y avait des trames avec le code 6 "Class 2 frame received from nonauthenticated station". Cela est lié à la commande aireplay-ng de la question précédente. Ce code signifie que l'AP est en train de se faire attaquer.
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -100,15 +118,39 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+## Script
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+Pour lancer le script: sudo python3 deauthAttack.py
+Pour tester il faut changer le nom de l'interface, l'adresse MAC de l'AP et l'adresse MAC de la station.
 
-__Question__ : Comment essayer de déauthentifier toutes les STA ?
+![Script 1](images/1-deauth.png)
 
-__Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
+__Question : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?__
+
+Code 1 : La raison de l'envoi n'est pas spécifié.
+
+Code 4 : La STA est inactive donc il faut la déconnecter
+
+Code 5 : L'AP est surchargé et incapable de répondre aux tentatives de connexions actuelles
+
+__Question : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?__
+
+Code 1: La raison de l'envoi n'est pas spécifié.
+
+Code 8: La station quitte son BSS.
+
+__Question : Comment essayer de déauthentifier toutes les STA ?__
+
+En utilisant l'adresse MAC FF:FF:FF:FF:FF:FF de broadcast.
+
+__Question : Quelle est la différence entre le code 3 et le code 8 de la liste ?__
+
+Le Code 3 dit que le client est désauthentifié et quitte l'ESS. Avec le Code 8 le client va être désassocié du BSS par un AP.
+
+__Question : Expliquer l'effet de cette attaque sur la cible__
+
+L'attaque permet de déconnecter l'hôte cible (ou tous les clients) de l'AP auquel il était connecté. Il ne sera pas possible de pouvoir accéder à internet donc il sera obligé de se reconnecter.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
@@ -118,12 +160,18 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Permettre à l'utilisateur de choisir le réseau à attaquer
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
+__Question : Expliquer l'effet de cette attaque sur la cible__
 
+Le but de cette attaque est d'observer les SSID disponibles afin d'en choisir un, de créer un faux beacon sur un canal différent et de le diffuser. L'AP va alors changer de canal pour se mettre sur le même canal que le faux beacon. Le client va alors se connecter au faux beacon et on pourra récupérer les informations de connexion.
+
+![Script 2](images/2-evilTween.png)
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+![Script 3](images/3-ssid.png)
+
 
 
 ## Partie 2 - probes
@@ -155,14 +203,24 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
-__Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+![Script 4](images/4-probeEvil.png)
 
-__Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
 
+__Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?__
+
+Chiffrer les trames *Probe Request* n'aurait tout simplement pas de sens. En effet, ces trames sont faites pour vérifier l'existance d'un réseau avec un SSID donné dans les parages, or chiffrer le paquet ferait qu'un éventuel AP qui offre ce SSID ne pourrait potentiellement pas le comprendre.
+
+Par exemple, imaginons un client qui s'est connecté par le passé au réseau "ABC" avec pour mot de passe "123". Si l'AP qui propose ce réseau Wifi change de mot de passe à "456", alors le paquet de *Probe Request* chiffré avec "123" fait qu'il ne pourra pas être déchiffré par l'AP.
+
+__Question : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?__
+
+Tout simplement parce que l'adresse MAC utilisée par ces appareils n'est plus fixe. Lors de la connexion à un AP, ces appareils choisissent une adresse MAC aléatoire parmi un lot définit. La seule information que peut déduire un attaquant sniffant le réseau est qu'il y a des machines de types Android ou iPhone qui sont connectés au réseau sniffé, mais rien de plus.
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+
+![Script 5 a](images/5-a-sniff.png)
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -174,6 +232,9 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+![Script 5 b](images/5-b-sniff.png)
+
+
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
@@ -181,7 +242,8 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
-
+La solution agit en deux temps. On récupère d'abord la liste des SSID cachés en utilisant la trame *Probe Request* avec le SSID vide. Ensuite, on envoie une trame *Probe Request* avec le SSID de chaque SSID caché trouvé. 
+Si l'AP répond à la trame, alors on a trouvé le SSID caché.
 
 ## Livrables
 
