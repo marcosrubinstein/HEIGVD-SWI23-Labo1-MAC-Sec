@@ -152,6 +152,17 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+La victime va se connecter à notre AP en pensant que c'est l'AP légitime car elle a le même SSID.
+On pourra donc voir tout le traffic de la victime et potentiellement voler des informations sensibles.
+
+Si la communication entre la victime et le serveur est sécurisée, on ne peut rien voler.
+Cependant on pourrait imaginer plusieurs attaques de l'homme dans le milieu, par exemple une attaque par DNS spoofing où l'on redirige la victime vers un serveur malicieux.
+
+Avant l'attaque, le Wifi n'a pas une bonne portée :
+![Avant](images/2_a.png)
+
+Après l'attaque, le Wifi a été créé (depuis le dongle) et a une bonne portée (vision de la machine hôte) :
+![Après](images/2_a.png)
 
 ### 3. SSID flood attack
 
