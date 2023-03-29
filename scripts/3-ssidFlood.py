@@ -1,9 +1,11 @@
 
 from scapy.layers.dot11 import *
 from faker import Faker
+import time
+import sys
 
 
-INTERFACE = "wlan0"
+INTERFACE = "wlx00c0ca6b5921"
 
 if __name__ == '__main__':
     # If a first argument is given, use it as a file containing SSIDs
@@ -24,8 +26,10 @@ if __name__ == '__main__':
     # Generate random MAC addresses for each SSID
     macs = [ Faker().mac_address() for _ in range(len(ssids)) ]
 
+    print("Flooding with SSID, use CTRL+C to stop...")
+
+
     while (True):
-        print("Flooding with SSID, use CTRL+C to stop...")
 
         for ssid, mac in zip(ssids, macs):
             # Boradcast the ssid
@@ -35,7 +39,5 @@ if __name__ == '__main__':
             frame = RadioTap() / dot11 / beacon / essid
             sendp(frame, iface=INTERFACE, verbose=0)
 
-            # Wait a bit to not flood TOO much
-            usleep(100)
 
 

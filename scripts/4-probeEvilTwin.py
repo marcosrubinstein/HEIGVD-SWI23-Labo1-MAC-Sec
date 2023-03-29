@@ -1,7 +1,7 @@
 
 from scapy.layers.dot11 import *
 
-INTERFACE = "wlan0"             # Interface to use
+INTERFACE = "wlx00c0ca6b5921"             # Interface to use
 AP_MAC = "11:22:33:44:55:66"    # MAC address of the fake access point
 SSID = "HEIG-VD"                # Probe Requests to answer to
 

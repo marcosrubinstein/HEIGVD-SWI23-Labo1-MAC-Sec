@@ -1,7 +1,7 @@
 
 from scapy.layers.dot11 import *
 
-INTERFACE = "wlan0"             # Interface to use
+INTERFACE = "wlx00c0ca6b5921"             # Interface to use
 SSID = "HEIG-VD"                # Probe Requests to answer to
 
 # Method to offer an evil twin for a particular SSID

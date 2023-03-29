@@ -167,6 +167,9 @@ __Question : Expliquer l'effet de cette attaque sur la cible__
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+![Script 3](images/3-ssid.png)
+
+
 
 ## Partie 2 - probes
 
@@ -197,6 +200,9 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
+![Script 4](images/4-probeEvil.png)
+
+
 __Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?__
 
 Chiffrer les trames *Probe Request* n'aurait tout simplement pas de sens. En effet, ces trames sont faites pour vérifier l'existance d'un réseau avec un SSID donné dans les parages, or chiffrer le paquet ferait qu'un éventuel AP qui offre ce SSID ne pourrait potentiellement pas le comprendre.
@@ -220,6 +226,9 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 9C:F3:87:34:3C:CB &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 00:6B:F1:50:48:3A
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
+
+![Script 5](images/5-sniff.png)
+
 
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
