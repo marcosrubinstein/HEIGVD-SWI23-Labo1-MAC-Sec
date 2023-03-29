@@ -322,7 +322,14 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
+La solution trouvée consiste à "sniffer" les trames de management qui passent,
+puis afficher certaines informations, comme le SSID, le BSSID ou autre. Dans le
+cas des réseau "invisibles", le SSID n'est pas envoyé, donc on récupére un
+champs vide. Le BSSID est en revanche bien présent et valide.  
+Afin de bien trouver tous les réseaux, le script fait du "hoping" sur plusieurs
+canaux.
 
+![exemple de scan](figures/6_scan_results.png)
 
 ## Livrables
 
