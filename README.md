@@ -256,6 +256,11 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
+Basiquement, quand un AP est configuré pour ne pas diffuser son SSID il emet des beacons avec un SSID vide. On peut donc dans un premier temps monitorer le traffic sans-fils, capturé les beacons qui on ce champs SSID vide. On récupère alors l'adresse MAC de l'AP. Ensuite on deauth les clients qui sont connectés à cet AP. Les clients vont alors essayer de se reconnecter à l'AP. Lors de cette reconnection, les STA vont envoyer des probe requests avec le SSID de l'AP. On peut donc capturer ces trames et récupérer le SSID de l'AP.
+
+
+https://www.researchgate.net/publication/356557247_Discovering_Hidden_Wireless_Networks_leverazing_Python_Scapy#pf3
+
 
 
 ## Livrables
