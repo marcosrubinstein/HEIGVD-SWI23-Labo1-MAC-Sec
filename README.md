@@ -218,7 +218,7 @@ Script: scripts/3_ssid_flood.py
 Démonstration:
 
 On peut exécuter le script sans spécifier de fichier, on doit donc choisir un
-nombre de SSID à générer.
+nombre de SSID à générer, ici on décide d'en créer 4.
 
 ![Résultat terminal sans fichier](images/3_script_res_2.png)
 
