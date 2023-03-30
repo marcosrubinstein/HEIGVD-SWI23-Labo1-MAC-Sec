@@ -254,19 +254,6 @@ Réponse:
 
 Script: scripts/5_detec.py
 
-```
-from scapy.all import *
-
-ssid = input("Entrez le ssid recherché: ")
-
-def packet_handler(packet):
-    if packet.haslayer(Dot11ProbeReq) and packet.info.decode('utf-8') == ssid:
-        print("STA '{}' cherche AP '{}'".format(packet.addr2, ssid))
-
-print("Sniffing en cours....")
-sniff(iface="wlan0mon", prn=packet_handler)
-```
-
 Exécution du script:
 
 La fonction airodump nous montre le réseau 'SWI' présent sur le canal 3:
@@ -294,43 +281,9 @@ Réponse:
 
 Script: scripts/5_b_detec.py
 
-```
-from scapy.all import *
-
-# Liste des STA assocée aux AP
-ap_sta_list = []
-
-# Fonction appelée pour traiter chaque paquet
-def handle_packet(pkt):
-    # Si le paquet = données
-    if pkt.type == 2:
-        # si le bit toDS est à 1 et fromDS à 0
-        # c'est à dire si le paquet est destiné à une AP
-        # source: https://stackoverflow.com/questions/52981542/python-scapy-distinguish-between-acesspoint-to-station
-        DS = pkt.FCfield & 0x3
-        toDS = DS & 0x01 != 0
-        fromDS = DS & 0x02 != 0
-
-        if toDS and not fromDS:
-            ap_sta = (pkt.addr2, pkt.addr1)
-
-            # Ajout de la pair ap sta dans la liste si pas deja présente
-            if ap_sta not in ap_sta_list:
-                ap_sta_list.append(ap_sta)
-                print(ap_sta_list[-1][0].upper() + "\t" + ap_sta_list[-1][1].upper())
-
-def main():
-    print("Sniffing en cours...")
-    print("STAs \t\t\t APs")
-    sniff(iface='wlan0mon', prn=handle_packet)
-
-if __name__ == "__main__":
-    main()
-```
-
 Exécution du script:
 
-La fonction airodump nous montre les stations associées aux APs. Elle nous
+La fonction 'airodump' nous montre les stations associées aux APs. Elle nous
 permettra de comparer les résultats de notre script :
 
 ![Résultat airodump](images/5_b_airodump.png)
