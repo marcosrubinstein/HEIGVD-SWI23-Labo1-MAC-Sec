@@ -43,8 +43,7 @@ if __name__ == "__main__":
         wifi_names = []
         fileName = input("Enter the file path of the AP list: ")
         with open(fileName, "r") as file:
-            wifi_names = file.read().split("\n")
-
+            wifi_names = [x for x in file.read().split("\n") if x != ""]
         n_ap = len(wifi_names)
 
     for i in range(n_ap):
