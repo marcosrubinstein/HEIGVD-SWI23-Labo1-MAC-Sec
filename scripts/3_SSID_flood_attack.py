@@ -43,7 +43,7 @@ if __name__ == "__main__":
         wifi_names = []
         fileName = input("Enter the file path of the AP list: ")
         with open(fileName, "r") as file:
-            wifi_names = file.read()
+            wifi_names = file.read().split("\n")
 
         n_ap = len(wifi_names)
 
@@ -54,5 +54,5 @@ if __name__ == "__main__":
             wifi_name = wifi_names[i]
 
         mac = RandMAC()
-        print(str(wifi_name) + " : " + str(mac))
+        print(f"{wifi_name} : {mac}")
         Thread(target=send_beacon, args=(wifi_name, mac)).start()
