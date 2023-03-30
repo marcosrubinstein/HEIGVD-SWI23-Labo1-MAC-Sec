@@ -4,6 +4,7 @@ from scapy.utils import *
 from random import random
 from config import WIFI_INTERFACE_NAME
 from threading import Thread
+from faker import Faker
 
 # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dot11.html
 
@@ -40,6 +41,6 @@ if __name__ == "__main__":
     n_ap = 5
 
     for _ in range(n_ap):
-        wifi_name = random_wifi_name()
+        wifi_name = Faker.name()
         print(wifi_name)
         Thread(target=send_beacon, args=(wifi_name, RandMAC())).start()
