@@ -26,14 +26,10 @@ from faker import Faker
 def send_beacon(ssid, mac):
     dot11 = Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=mac, addr3=mac)
     # ESS+privacy to appear as secured on some devices
-    beacon = Dot11Beacon(cap="ESS+privacy")
+    beacon = Dot11Beacon(cap="ESS")
     essid = Dot11Elt(ID="SSID", info=ssid, len=len(ssid))
     frame = RadioTap() / dot11 / beacon / essid
     sendp(frame, inter=0.1, loop=1, iface=WIFI_INTERFACE_NAME, verbose=0)
-
-
-def random_wifi_name():
-    return randstring(math.floor(random() * 6) + 5)
 
 
 if __name__ == "__main__":
