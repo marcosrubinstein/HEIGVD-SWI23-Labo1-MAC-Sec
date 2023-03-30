@@ -1,13 +1,15 @@
-from scapy.fields import math
+from scapy.fields import RandMAC, math
 from scapy.layers.dot11 import *
 from scapy.utils import *
 from random import random
+from config import WIFI_INTERFACE_NAME
 
 # https://scapy.readthedocs.io/en/latest/api/scapy.layers.dot11.html
 ssids = ["wifi1", "wifi2", "wifi3"]
 wifi_name = randstring(math.floor(random() * 6) + 5)
 
 wifi_ssid = "test-wifi"
+randomSenderMac = RandMAC()
 
 sendp(
     RadioTap()
@@ -19,6 +21,6 @@ sendp(
     / Dot11EltRates(rates=[130, 132, 11, 22])
     / Dot11Elt(ID="DSset", info="\x03")
     / Dot11Elt(ID="TIM", info="\x00\x01\x00\x00"),
-    iface="wlan0",
+    iface=WIFI_INTERFACE_NAME,
     loop=1,
 )
