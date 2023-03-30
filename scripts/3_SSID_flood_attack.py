@@ -28,7 +28,14 @@ def send_beacon(ssid, mac):
     # ESS+privacy to appear as secured on some devices
     beacon = Dot11Beacon(cap="ESS")
     essid = Dot11Elt(ID="SSID", info=ssid, len=len(ssid))
-    frame = RadioTap() / dot11 / beacon / essid
+    # Dot11Elt(ID="Rates", info="\x82\x84\x0b\x16")/Dot11Elt(ID="DSset", info=chr(channel))
+    others = (
+        Dot11EltRates(rates=[130, 132, 11, 22])
+        / Dot11Elt(ID="DSset", info="\x03")
+        / Dot11Elt(ID="TIM", info="\x00\x01\x00\x00")
+    )
+
+    frame = RadioTap() / dot11 / beacon / essid / others
     sendp(frame, inter=0.1, loop=1, iface=WIFI_INTERFACE_NAME, verbose=0)
 
 
