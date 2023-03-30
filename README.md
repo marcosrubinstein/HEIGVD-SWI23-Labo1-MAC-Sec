@@ -211,6 +211,31 @@ le réseau SWI sur le canal 13 :
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+Réponse:
+
+Script: scripts/3_ssid_flood.py
+
+Démonstration:
+
+On peut exécuter le script sans spécifier de fichier, on doit donc choisir un
+nombre de SSID à générer.
+
+![Résultat terminal sans fichier](images/3_script_res_2.png)
+
+On voit que les SSID apparaissent.
+
+![Résultat airodump](images/3_script_res_2_wifisearch.png)
+
+On peut aussi essayer avec un fichier contenant des SSID choisis.
+
+![Résultat airodump](images/3_script_res_1.png)
+
+Quand on recherche les Wifis avec un device, on obtient le bon résultat.
+
+![Résultat airodump](images/3_script_res_1_wifisearch.png)
+
+
+
 
 ## Partie 2 - probes
 
@@ -228,7 +253,6 @@ Dans ce type de trame, utilisée par les clients pour la recherche active de ré
 * Des noms de réseaux (SSID) recherchés par le client.
 	* Un Probe Request peut être utilisé pour « tracer » les pas d’un client. Si une trame Probe Request annonce le nom du réseau d’un hôtel en particulier, par exemple, ceci est une bonne indication que le client s’est déjà connecté au dit réseau. 
 	* Un Probe Request peut être utilisé pour proposer un réseau « evil twin » à la cible.
-
 Il peut être utile, pour des raisons entièrement légitimes et justifiables, de détecter si certains utilisateurs se trouvent dans les parages. Pensez, par exemple, au cas d'un incendie dans un bâtiment. On pourrait dresser une liste des dispositifs et la contraster avec les personnes qui ont déjà quitté le lieu.
 
 A des fins plus discutables du point de vue éthique, la détection de client s'utilise également pour la recherche de marketing. Aux Etats Unis, par exemple, on "sniff" dans les couloirs de centres commerciaux pour détecter quelles vitrines attirent plus de visiteurs, et quelle marque de téléphone ils utilisent. Ce service, interconnecté en réseau, peut aussi déterminer si un client visite plusieurs centres commerciaux un même jour ou sur un certain intervalle de temps.
