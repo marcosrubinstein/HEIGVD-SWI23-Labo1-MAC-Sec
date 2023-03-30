@@ -26,7 +26,7 @@ from faker import Faker
 def send_beacon(ssid, mac):
     dot11 = Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=mac, addr3=mac)
     # ESS+privacy to appear as secured on some devices
-    beacon = Dot11Beacon(cap="ESS")
+    beacon = Dot11Beacon(cap="ESS+privacy")
     essid = Dot11Elt(ID="SSID", info=ssid, len=len(ssid))
     # Dot11Elt(ID="Rates", info="\x82\x84\x0b\x16")/Dot11Elt(ID="DSset", info=chr(channel))
     others = (
@@ -41,12 +41,10 @@ def send_beacon(ssid, mac):
 
 if __name__ == "__main__":
     # number of access points
-    n_ap = 5
-
-    for _ in range(n_ap):
-        wifi_name = Faker().name()
-        mac = RandMAC()
-        print(wifi_name)
-        print(mac)
-        # Thread(target=send_beacon, args=(wifi_name, RandMAC())).start()
-        send_beacon(wifi_name, mac)
+    n_ap = input("Enter the number of fake AP: ")
+    if isinstance(n_ap, int):
+        for _ in range(n_ap):
+            wifi_name = Faker().name()
+            mac = RandMAC()
+            print(wifi_name + " : " + mac)
+            Thread(target=send_beacon, args=(wifi_name, mac)).start()
