@@ -102,7 +102,7 @@ Exemple de fonctionnement sans liste de noms fournie par l'utilisateur.
 
 ***Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).
+Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
 ![Exemple du fonctionnement du script](images/probe_evil.png)
 	
 Afin de montrer le bon fonctionnement du script, le "faux réseau" créé lors de la détection de probe-request cherchant le SSID "AndroidAP" est nommé AndroidAPfaked. Il est évident que dans le cas d'une réelle attaque, le nom du "faux réseau" doit être le même que le vrai.
@@ -121,7 +121,7 @@ Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pou
 
 ***Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).
+Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
 	
 ![Exemple du fonctionnement du script](images/stationsLister.png)
 	
@@ -129,7 +129,7 @@ Le script liste simplement les stations qui recherchent le SSID "AndroidAP".
 
 ***Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP.***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)).
+Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)). Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
 	
 ![Exemple du fonctionnement du script](images/linksStationsAndAPs.png)
 	
