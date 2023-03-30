@@ -32,7 +32,7 @@ def send_beacon(ssid, mac):
 
 
 def random_wifi_name():
-    randstring(math.floor(random() * 6) + 5)
+    return randstring(math.floor(random() * 6) + 5)
 
 
 if __name__ == "__main__":
