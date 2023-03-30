@@ -1,3 +1,16 @@
+"""
+Titre: 4_evil_twin_prb_req
+Sujet: HEIGVD-SWI23-Labo1-MAC-Sec
+Description:
+    - Détecte une STA cherchant un SSID particulier
+    - proposer un evil twin si le SSID est trouvé
+Auteurs:
+    - Anthony Coke
+    - Guilain Mbayo
+    - Mehdi Salhi
+Date: 30.03.2023
+"""
+
 #!/usr/bin/env python
 from scapy.all import *
 from faker import Faker

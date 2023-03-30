@@ -1,10 +1,23 @@
+"""
+Titre: 6_find_hidden_ssid
+Sujet: HEIGVD-SWI23-Labo1-MAC-Sec
+Description:
+    Révèle les SSID cachés
+Auteurs:
+    - Anthony Coke
+    - Guilain Mbayo
+    - Mehdi Salhi
+Date: 30.03.2023
+"""
+
 from scapy.all import *
 import os
 
 # Define the filter to capture only Wi-Fi packets
 wifi_filter = "wlan type mgt"
 
-# Configure the network interface in monitor mode
+# Configure the network interface in monitor mode (interface may have to be
+# changed)
 interface = "wlan0mon"
 os.system(f"sudo ip link set {interface} down")
 os.system(f"sudo iw dev {interface} set type monitor")
@@ -14,6 +27,7 @@ os.system(f"sudo ip link set {interface} up")
 # set the list of Wi-Fi channels to scan
 channels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13]
 
+# scan each channel
 for channel in channels:
     os.system(f"sudo iwconfig {interface} channel {channel}")
     print(f"Scanning channel {channel}...")

@@ -1,3 +1,17 @@
+"""
+Titre: 3_ssid_flood
+Sujet: HEIGVD-SWI23-Labo1-MAC-Sec
+Description:
+    Inonde de réseau wifi dont les SSID proviennent d'une liste contenue dans
+    un fichier texte. S'il n'y a pas de fichier textes, l'utilisateur peut
+    spécifier le nombre d'AP à générer dont le nom sera généré aléatoirement.
+Auteurs:
+    - Anthony Coke
+    - Guilain Mbayo
+    - Mehdi Salhi
+Date: 30.03.2023
+"""
+
 from scapy.all import *
 from faker import Faker
 from threading import Thread
