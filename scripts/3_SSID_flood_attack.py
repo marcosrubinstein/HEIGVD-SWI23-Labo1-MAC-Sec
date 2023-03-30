@@ -27,9 +27,32 @@ def send_beacon(ssid, mac):
 
 if __name__ == "__main__":
     # number of access points
-    n_ap = int(input("Enter the number of fake AP: "))
-    for _ in range(n_ap):
-        wifi_name = Faker().name()
+    choice = int(
+        input(
+            "--- Fake AP Generator ---\n"
+            + "[1] Generate N random AP\n"
+            + "[2] Generate AP from list file\n"
+            + "> "
+        )
+    )
+
+    n_ap = 0
+    if choice == 1:
+        n_ap = int(input("Enter the number of fake AP: "))
+    elif choice == 2:
+        wifi_names = []
+        fileName = input("Enter the file path of the AP list: ")
+        with open(fileName, "r") as file:
+            wifi_names = file.read()
+
+        n_ap = len(wifi_names)
+
+    for i in range(n_ap):
+        if choice == 1:
+            wifi_name = Faker().name()
+        else:
+            wifi_name = wifi_names[i]
+
         mac = RandMAC()
         print(str(wifi_name) + " : " + str(mac))
         Thread(target=send_beacon, args=(wifi_name, mac)).start()
