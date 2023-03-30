@@ -176,11 +176,36 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+Réponse: 
+
+Script: 2_evil_tween
+
 En prenant par exemple le réseau "ABC" présent sur le canal 6 où est connecté
 Bob, cette attaque va émettre un beacon annonçant que le réseau "ABC" est sur le
 canal 12. Cela aura pour effet que l'ordinateur de bob va tenter de se connecter
 au réseau "ABC" sur le canal 12 alors qu'il n'existe pas sur ce canal. Cela
 provoquera des déconnexions du vrai réseau.
+
+Démonstration:
+
+On lance tout d'abord airodump pour afficher les réseaux disponibles. Cela nous
+permettra de vérifier si notre script affiche les bons réseaux :
+
+![Airodump](images/2_script_airo.png)
+
+On peut constater le réseau SWI sur le cannal 7.
+
+On démarre ensuite wireshark afin de captuer le beacon que va envoyer notre
+script puis on lance notre script :
+
+![Script résultat](images/2_script_res.png)
+
+On peut également constater le réseau SWI sur le cannal 7.
+
+On peut constater que notre script a effectivement envoyé un beacon en annoncant
+le réseau SWI sur le canal 13 :
+
+![Script résultat](images/2_script_wireshark.png)
 
 ### 3. SSID flood attack
 

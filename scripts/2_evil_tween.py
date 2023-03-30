@@ -25,7 +25,6 @@ def pkt_handler(pkt):
     network = []
     if pkt.haslayer(Dot11Beacon) or pkt.haslayer(Dot11ProbeResp):
         try:
-            #if pkt.type== 0 and pkt.subtype == 8:
             if pkt.info not in ap_list and len(pkt.info) > 0:
                 ssid = pkt[Dot11Elt].info
                 bssid = pkt[Dot11].addr3
