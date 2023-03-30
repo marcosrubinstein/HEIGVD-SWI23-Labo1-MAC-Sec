@@ -15,7 +15,6 @@ __A faire en équipes de deux personnes__
 8. [Échéance](#%c3%89ch%c3%a9ance)
 
 
-
 ### Pour cette partie pratique, vous devez être capable de :
 
 *	Détecter si un certain client WiFi se trouve à proximité
@@ -90,10 +89,13 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+TODO théorie
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+TODO : Wireshark
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
+TODO : Script
 
 * 1 - Unspecified
 * 4 - Disassociated due to inactivity
@@ -101,17 +103,23 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 8 - Deauthenticated because sending STA is leaving BSS
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+TODO : Théorie
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+TODO : Théorie
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+TODO : Théorie
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
+TODO : Théorie
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+TODO : Théorie
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
+TODO : Script
 
 * Dresser une liste des SSID disponibles à proximité
 * Présenter à l'utilisateur la liste, avec les numéros de canaux et les puissances
@@ -119,11 +127,14 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+TODO : Théorie
 
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+TODO : Script
 
 
 ## Partie 2 - probes
@@ -152,19 +163,23 @@ A des fins plus discutables du point de vue éthique, la détection de client s'
 Nous allons nous intéresser dans cet exercice à la création d'un evil twin pour viser une cible que l'on découvre dynamiquement utilisant des probes.
  
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
+TODO : Script
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+TODO : Théorie
 
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
-
+TODO : Théorie
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+TODO : Script
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
+TODO : Script
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
 
@@ -178,10 +193,10 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
 Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".
+TODO : Script
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
-
-
+TODO : Théorie
 
 ## Livrables
 
