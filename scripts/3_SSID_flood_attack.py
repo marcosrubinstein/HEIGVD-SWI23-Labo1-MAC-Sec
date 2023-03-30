@@ -41,6 +41,6 @@ if __name__ == "__main__":
     n_ap = 5
 
     for _ in range(n_ap):
-        wifi_name = Faker.name()
+        wifi_name = Faker().name()
         print(wifi_name)
         Thread(target=send_beacon, args=(wifi_name, RandMAC())).start()
