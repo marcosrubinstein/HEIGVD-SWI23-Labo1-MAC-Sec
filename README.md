@@ -155,6 +155,10 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+> Cette attaque fait qu'un STA voit deux SSID de même nom apparaître dans sa liste de réseaux disponibles. Il y a donc une chance qu'elle se connecte à un faux AP que nous aurions mis en place au lieu de se connecter à son AP légitime.
+>
+> ![](images/fake_channel_result.png)
+
 
 ### 3. SSID flood attack
 
