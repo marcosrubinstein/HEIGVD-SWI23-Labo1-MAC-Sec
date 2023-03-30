@@ -98,3 +98,39 @@ Exemple de fonctionnement sans liste de noms fournie par l'utilisateur.
 
 # Partie 2 - probes
 
+## Probe Request Evil Twin Attack
+
+***Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).***
+
+Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).
+![Exemple du fonctionnement du script](images/probe_evil.png)
+	
+Afin de montrer le bon fonctionnement du script, le "faux réseau" créé lors de la détection de probe-request cherchant le SSID "AndroidAP" est nommé AndroidAPfaked. Il est évident que dans le cas d'une réelle attaque, le nom du "faux réseau" doit être le même que le vrai.
+On voit sur la capture d'écran que des Probe Requests sont envoyées à la recherche du SSID "AndroidAP". A ce moment, on peut voir que le faux réseau (AndroidAPfaked) est créé à droite dans la liste des wifis détectés par une machine Windows.
+
+### Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+	
+Ces trames doivent être envoyées en clair car elles sont utilisées par les clients afin de rechercher activement des réseaux.
+Si les trames probes étaient chiffrées, les points d'accès ne pourraient pas lire le contenu et ne pourraient donc répondre avec des probes responses.
+
+### Question : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pour les trames probes. Par conséquent on aurait beaucoup plus de peine à les tracer puisqu'on ne pourrait plus comparer les adresses MAC.
+
+### Détection de clients et réseaux
+
+***Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné***
+
+Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).
+	
+![Exemple du fonctionnement du script](images/stationsLister.png)
+	
+Le script liste simplement les stations qui recherchent le SSID "AndroidAP".
+
+***Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP.***
+
+Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)).
+	
+![Exemple du fonctionnement du script](images/linksStationsAndAPs.png)
+	
+Le script liste les stations et l'AP auxquelles ces dernières sont connectées.
