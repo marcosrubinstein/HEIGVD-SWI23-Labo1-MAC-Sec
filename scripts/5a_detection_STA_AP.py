@@ -5,11 +5,13 @@ staKnown = []
 
 
 def packet_handler(packet, ssid):
-    isProbeRequest = packet.haslayer(Dot11ProbeReq)  # Show only prob requests
+    if not packet.haslayer(Dot11ProbeReq):  # Show only prob requests
+        return
+
     ssidSearched = packet.getlayer(Dot11ProbeReq).info.decode()  # with the ssid asked
 
     sta = packet.addr2
-    if isProbeRequest and ssidSearched == ssid and sta not in staKnown:
+    if ssidSearched == ssid and sta not in staKnown:
         print(f"STA '{sta}' is looking for the AP")
         staKnown.append(sta)
 
