@@ -4,7 +4,7 @@ from config import WIFI_INTERFACE_NAME
 
 def packet_handler(packet, ssid):
     isProbeRequest = packet.haslayer(Dot11ProbeReq)  # Show only prob requests
-    ssidSearched = packet.info.decode("utf-8")  # with the ssid asked
+    ssidSearched = packet.getlayer(Dot11ProbeReq).info.decode()  # with the ssid asked
 
     if isProbeRequest and ssidSearched == ssid:
         print(f"STA '{packet.addr2}' is looking for the AP")
