@@ -233,7 +233,15 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
+Pour résoudre ce problème, je scan le réseau et j'enregistre toutes les trames de type Beacon et Probe Response.
+Le réseau invisible va s'annoncer avec des 0x00 dans le nom du SSID.
+Afin de le démasquer, il faut qu'une station se connecte à l'AP invisible.
 
+Mon script va scanner et filtrer les trames de type Beacon et Probe Response et récupérer les trames Beacon des réseaux invisibles.
+Ensuite, il vérifie que l'adresse MAC (source) de l'AP invisible et l'adresse MAC (destination) de la Probe Response est la même.
+Si c'est le cas, alors on peut récupérer le SSID stocké dans la Probe Request.
+
+![Exemple d'utilisation](images/6_unhide.png)
 
 ## Livrables
 
