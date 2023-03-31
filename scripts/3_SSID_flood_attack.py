@@ -1,7 +1,6 @@
-from scapy.fields import RandMAC, math
+from scapy.fields import RandMAC
 from scapy.layers.dot11 import *
 from scapy.utils import *
-from random import random
 from config import WIFI_INTERFACE_NAME
 from threading import Thread
 from faker import Faker
@@ -10,9 +9,10 @@ from faker import Faker
 
 
 def send_beacon(ssid, mac):
+    # subtype 8 : Beacon
     dot11 = Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=mac, addr3=mac)
 
-    # ESS+privacy to appear as secured on some devices
+    # ESS+privacy to appear secured
     beacon = Dot11Beacon(cap="ESS+privacy")
     essid = Dot11Elt(ID="SSID", info=ssid, len=len(ssid))
     others = (
@@ -26,7 +26,6 @@ def send_beacon(ssid, mac):
 
 
 if __name__ == "__main__":
-    # number of access points
     choice = int(
         input(
             "--- Fake AP Generator ---\n"
@@ -43,15 +42,19 @@ if __name__ == "__main__":
         wifi_names = []
         fileName = input("Enter the file path of the AP list: ")
         with open(fileName, "r") as file:
+            # read wifi names from file (values are separated with returns)
             wifi_names = [x for x in file.read().split("\n") if x != ""]
         n_ap = len(wifi_names)
 
     for i in range(n_ap):
         if choice == 1:
+            # Wifi random name is taken from the faker package
             wifi_name = Faker().name()
         else:
             wifi_name = wifi_names[i]
 
         mac = RandMAC()
-        print(f"{wifi_name} : {mac}")
-        Thread(target=send_beacon, args=(wifi_name, mac)).start()
+        print(f"{wifi_name} : {mac}")  # Fake AP are displayed
+        Thread(
+            target=send_beacon, args=(wifi_name, mac)
+        ).start()  # Launch one thread per wifi created to be parallelised
