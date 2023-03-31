@@ -223,6 +223,8 @@ D'autre part, les téléphones récents n'envoient plus de probe request spontan
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
+![sta ap 1](images/5_a.png)
+
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
@@ -233,6 +235,7 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+![sta ap 1](images/5_b.png)
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
