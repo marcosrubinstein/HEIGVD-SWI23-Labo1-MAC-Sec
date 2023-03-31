@@ -29,6 +29,7 @@ def packet_handler(packet):
         association = f"{sta}\t{ap}"
         if association not in knownAssociations:
             print(association)
+            knownAssociations.append(association)
 
 
 if __name__ == "__main__":
