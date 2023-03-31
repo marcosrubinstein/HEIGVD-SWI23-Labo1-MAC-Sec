@@ -34,5 +34,5 @@ def packet_handler(packet):
 
 if __name__ == "__main__":
     print("Sniffing for all STAs connected to APs")
-    print("STA \t\t\t AP")
+    print("STA\t\t\t AP")
     sniff(iface=WIFI_INTERFACE_NAME, prn=packet_handler)
