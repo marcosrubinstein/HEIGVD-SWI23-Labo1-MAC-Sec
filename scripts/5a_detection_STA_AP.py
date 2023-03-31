@@ -1,13 +1,17 @@
 from scapy.all import *
 from config import WIFI_INTERFACE_NAME
 
+staKnown = []
+
 
 def packet_handler(packet, ssid):
     isProbeRequest = packet.haslayer(Dot11ProbeReq)  # Show only prob requests
     ssidSearched = packet.getlayer(Dot11ProbeReq).info.decode()  # with the ssid asked
 
-    if isProbeRequest and ssidSearched == ssid:
-        print(f"STA '{packet.addr2}' is looking for the AP")
+    sta = packet.addr2
+    if isProbeRequest and ssidSearched == ssid and sta not in staKnown:
+        print(f"STA '{sta}' is looking for the AP")
+        staKnown.append(sta)
 
 
 if __name__ == "__main__":
