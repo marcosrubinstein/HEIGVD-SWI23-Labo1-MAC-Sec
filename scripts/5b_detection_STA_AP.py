@@ -2,6 +2,9 @@ from scapy.all import *
 from config import WIFI_INTERFACE_NAME
 
 
+knownAssociations = []
+
+
 def packet_handler(packet):
     # taken from https://stackoverflow.com/questions/52981542/python-scapy-distinguish-between-acesspoint-to-station
 
@@ -15,10 +18,17 @@ def packet_handler(packet):
 
         # from STA to AP
         if toDS and not fromDS:
-            print(f"{packet.addr2}\t{packet.addr1}")
+            sta = packet.addr2
+            ap = packet.addr1
+
         # from AP to STA
         if not toDS and fromDS:
-            print(f"{packet.addr1}\t{packet.addr2}")
+            sta = packet.addr1
+            ap = packet.addr2
+
+        association = f"{sta}\t{ap}"
+        if association not in knownAssociations:
+            print(association)
 
 
 if __name__ == "__main__":
