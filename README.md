@@ -168,6 +168,13 @@ Après l'attaque, le Wifi a été créé (depuis le dongle) et a une bonne port�
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+Exemple de la flood attack avec des SSIDs randoms
+![flood attack 1](images/3_a.png)
+![flood attack 2](images/3_b.png)
+
+Exemple de la flood attack avec une liste de 3 SSIDs
+![flood attack 3](images/3_c.png)
+![flood attack 4](images/3_d.png)
 
 ## Partie 2 - probes
 
