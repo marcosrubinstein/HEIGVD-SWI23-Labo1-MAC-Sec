@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 5.a)
+# It scans on the provided interface and displays the MAC address of devices that probed the given SSID
+
 from scapy.all import *
 import argparse
 

@@ -114,7 +114,7 @@ __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres tra
 
 > Filtre d'affichage utilisé: `wlan.fc.type==0 && wlan.fc.subtype==12`
 >
-> Nous n'avons pas trouvé d'autres trames de déauthentification, car la capture a été faite sur un partage de connexion mobile sur lequel se trouvait uniquement notre PC.
+> Vu la durée restreinte de la capture, et comme ce ne sont pas des trames fréquentes, nous n'avons pas trouvé d'autres trames de déauthentification
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -137,7 +137,7 @@ __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
 > Nous avons deux options pour faire ceci:
 >
-> 1. Envoyer un message de déauthentification à l'adresse de broadcast FF:FF:FF:FF:FF:FF. Celui-ci va adresser le paquet à toutes les STA du BSSID
+> 1. Envoyer un message de déauthentification à l'adresse de broadcast FF:FF:FF:FF:FF:FF. Celui-ci va adresser le paquet à toutes les STA du BSS
 > 2. Ecouter et capturer les adresses MAC de toutes les STA qui communiquent avec notre AP. Forger des trames de déauthentification pour chaque de STA.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
@@ -160,35 +160,14 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
-> Cette attaque fait qu'un STA voit deux SSID de même nom apparaître dans sa liste de réseaux disponibles. Il y a donc une chance qu'elle se connecte à un faux AP que nous aurions mis en place au lieu de se connecter à son AP légitime.
+> Cette attaque fait qu'une STA voit deux SSID de même nom apparaître dans sa liste de réseaux disponibles.
+>
+> * Il y a donc une chance qu'elle se connecte à un faux AP que nous aurions mis en place au lieu de se connecter à son AP légitime.
+> * Dans le cas d'une déauthentification, la STA va tenter une reconnexion automatique. Sur un réseau ouvert, il est possible que la reconnexion se fasse sur le faux AP
+>
+> ![](images/2-script.png)
 >
 > ![](images/fake_channel_result.png)
-Lors des premiers essaies, l'adresse MAC n'était pas spoofée. Nous avons intégré le changement d'adresse MAC sur l'interface directement dans le script. De cette façon, nous nous faisons réellement passé pour le beacon d'origine.
-
-Nous pouvons, depuis une victime, lister les AP environnant avec la commande suivate:
-
-```bash
-iwlist wlp3s0 scan
-```
-
-Nous voyons que la victime détecte bien 2 fois le même AP (même SSID et BSSID)
-
-![iwlist_wlp3s0_scan](images/iwlist_clean.png)
-
-Si on observer le trafic wireshark, nous voyons les échanges et packets suivants:
-![ex_1_2_wireshark](images/ex_1_2_wireshark.png)
-
-![ex_1_2_conversations](images/ex_1_2_conversations.png)
-
-Nous voyons que des paquets nous parviennent.
-
-Quelques observations:
-
-* Initialement, le client était sur le réseau 5GHz, et lorsque l'attaque était en cours, le réseau 2.4GHz ne s'affichait pas.
-  Lorsque l'attaque a été arrêtée, le réseau s'affichait à nouveau. Cela peut être une coïncidence, ou alors l'appareil n'arrivait pas à déterminer le canal à utiliser.
-* Le channel est constant, il reste sur le channel 1 bien que l'antenne servant à l'attaque (canal 7) soit bien plus proche
-  Cela peut être dû à la configuration wifi
-* Le connexion semble plus lente lorsque l'attaque est en cours, ce qui ne correspond pas à l'affirmation ci-dessus comme quoi le canal ne change pas
 
 
 
@@ -196,7 +175,18 @@ Quelques observations:
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+> Cette capture montre le fonctionnement du script avec une liste de SSIDs
+>
 > ![](images/ssid_flood_script.png)
+>
+> Cette capture montre le fonctionnement du script avec des SSIDs aléatoires
+>
+> ![](images/ssid_flood_random_script.png)
+>
+> Cette capture montre les SSID aléatoires visibles depuis un script de scanning des SSIDs visibles. Ces APs ne sont pas visibles sur nos ordinateurs, mais on peut les voir depuis les téléphones mobiles
+>
+> ![](images/ssid_flood_random_names.png)
+
 
 
 ## Partie 2 - probes
@@ -230,17 +220,22 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
-Tout le monde peut lire ces trames car aucune connexion n'est établie avec l'AP comme ce dernier est inconnu.
-De ce fait, on ne peut pas chiffrer car le destinataire ne saurait pas comment déchiffrer.
+> Tout le monde peut lire ces trames car aucune connexion n'est établie avec l'AP comme ce dernier est inconnu.
+> De ce fait, on ne peut pas chiffrer car le destinataire ne saurait pas comment déchiffrer.
 
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
-Les appareils récents spoof leurs adresses MAC à la volée ce qui fait qu'elle change régulièrement.
-Comme c'est l'adresse MAC qui sert à tracer les dispositifs, il n'y a pas moyen de déterminer que 2 adresses MAC différentes correspondent en réalité au même appareil.
+
+> Les appareils récents spoofent leurs adresses MAC à la volée ce qui fait qu'elle change régulièrement.
+> Comme c'est l'adresse MAC qui sert à tracer les dispositifs, il n'y a pas moyen de déterminer que 2 adresses MAC différentes correspondent en réalité au même appareil.
+
+
 
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+
+![5_1_illustration](images/5_1_illustration.png)
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -252,12 +247,19 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+![5_2_illustration](images/5_2_illustration.png)
+
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
 Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
+
+> Dans le cas d'un AP invisible, les trames de beacon sont toujours envoyées mais sans SSID.
+> On peut écouter le trafic environnant pour trouver les trames à destination d'un AP caché.
+>
+> Nous n'avons cependant pas fait le script.
 
 
 
@@ -287,4 +289,4 @@ Un fork du repo original . Puis, un Pull Request contenant :
 
 ## Échéance
 
-Le 15 mars 2023 à 23h59
+Le 2 avril 2023 à 23h59

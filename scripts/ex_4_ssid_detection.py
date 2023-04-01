@@ -1,8 +1,15 @@
 #!/usr/bin/env python3
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 4
+# Scans all channels to find SSIDs by listerning to Probe Requests and then emit a spoofed beacon that match one of the probed AP
+
 # Source: https://gist.github.com/securitytube/5291959
 
-# TODO : same as ex_1_2 but with probe requests
 
 from swi_utils import (
     find_ap_by_probe_request_timeout,
@@ -56,7 +63,10 @@ def main(limit_to_local=False):
         local_ap = find_ap()
         ap_list = list(set(ap_list).intersection(set(local_ap)))
     target = ask_ap_to_spoof(ap_list)
-    target.spoof(interface, spoof_mac=True)
+    target.spoof(
+        interface,
+        # spoof_mac=True  # uncomment this line to also spoof the MAC address of the device
+    )
 
 
 

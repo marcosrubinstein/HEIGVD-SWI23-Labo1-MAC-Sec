@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 5.b)
+# It scans on the provided interface and displays the STAs and their associated AP
+
+
 from scapy.all import *
 import argparse
 

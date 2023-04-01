@@ -1,5 +1,13 @@
 #!/usr/bin/env python
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This script is made for exercise 1
+# Spoof deauthentication trame to deauthenticate a STA
+
 from scapy.all import *
 import sys
 import argparse

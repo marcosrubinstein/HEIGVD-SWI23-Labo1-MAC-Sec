@@ -1,5 +1,14 @@
 #!/usr/bin/env python
 
+# Authors:
+# - Yanick Thomann
+# - Jean Gachet
+# - David Gallay
+# 
+# This file provide utility function shared across the scripts
+
+
+
 # https://www.4armed.com/blog/forging-wifi-beacon-frames-using-scapy/
 
 from scapy.all import (
