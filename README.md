@@ -88,21 +88,24 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-`aireplay-ng -0 1 -a 00:0C:29:DD:8D:2A -c 00:0F:B5:34:30:30 eth0`
+`aireplay-ng -0 1 -a C8:21:58:91:55:2D -c 00:0C:29:15:B5:C3 eth0`
 + **-0** indique qu'il s'agit d'une désauthentification
 + **1** correspond au nombre de désauthentification à envoyer
 + **-a** indique l'adresse MAC de l'Access Point
 + **-c** indique l'adresse MAC du client à désauthentifier
 + **eth0** est le nom de l'interface réseau
 
-__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
-TODO théorie
+__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?  
+Il s'agit du code 7 : Class 3 frame received from nonassociated station  
+Ce message signifie que le point d'accès à reçu une trame d'une station qui n'est pas associée à cet AP, donc qui n'est pas autorisée à communiquer.
 
-__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
-TODO : Wireshark
+__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?<br />  
+`wlan.fc.type_subtype == 0x0c`  
+Ce filtre permet d'afficher tous les paquets de type/subtype 0x0c. Comme nous l'avons vu dans la première question, le type 0 correspond aux paquets de désauthentification.<br />  
+En observant le réseau aucun autre paquet n'est apparut. Cela paraît logique car notre réseau ne comporte que l'appareil que nous avons éjecté ainsi et la vm kali linux. Si nous étions sur un réseau comportant d'autres machines, nous verrions potentiellement d'autres appareils se déconnecter.
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
-TODO : Script
+**TODO : Script**
 
 * 1 - Unspecified
 * 4 - Disassociated due to inactivity
