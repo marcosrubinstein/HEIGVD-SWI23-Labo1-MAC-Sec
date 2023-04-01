@@ -21,16 +21,18 @@ def packet_handler(pkt):
         from_ds = ds & 0x2 == 1  # 2nd bit is from DS
 
         # display DS status and addresses (debug)
-        print(Pkt_Info.format(pkt.type, pkt.subtype, from_ds, to_ds, pkt.addr1, pkt.addr2, pkt.addr3, pkt.addr4))
+        # print(Pkt_Info.format(pkt.type, pkt.subtype, from_ds, to_ds, pkt.addr1, pkt.addr2, pkt.addr3, pkt.addr4))
 
         # Depending on the DS status, STA and AP addresses differ
         # ref: https://mrncciew.files.wordpress.com/2014/09/cwap-mac-address-01.png
 
-        # toDS = 0 and fromDS = 0 => control or management frames, or adhoc networks => not pertinent here
-        # toDS = 1 and fromDS = 1 => not pertinent here
-
         sta_addr = ""
         ap_addr = ""
+
+        # toDS = 0 and fromDS = 0
+        if to_ds is False and from_ds is True:
+            sta_addr = pkt.addr2
+            ap_addr = pkt.addr3
 
         # toDS = 0 and fromDS = 1
         if to_ds is False and from_ds is True:
@@ -42,8 +44,9 @@ def packet_handler(pkt):
             sta_addr = pkt.addr2
             ap_addr = pkt.addr1
 
-        if sta_addr != "" and sta_addr != BROADCAST\
-                and ap_addr != "" and ap_addr != BROADCAST:
+        # toDS = 1 and fromDS = 1 => not pertinent here
+
+        if sta_addr != "" and ap_addr != "" and pkt.addr1 != BROADCAST:
             print("{}   {}".format(sta_addr, ap_addr))
 
 
@@ -59,7 +62,7 @@ def main():
     else:
         interface = args.interface
 
-    print("STAs             APs")
+    print("STAs                APs")
     sniff(prn=packet_handler, iface=interface)
 
 
