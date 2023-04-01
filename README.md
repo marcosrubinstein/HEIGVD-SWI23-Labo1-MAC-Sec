@@ -86,12 +86,35 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 | 39 | Requested from peer QSTA due to timeout                                                                                                                                              |
 | 40 | Peer QSTA does not support the requested cipher suite                                                                                                                                              |
 | 46-65535 | Reserved                                                                                                                                              |
- 
+
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
+
+> Pour que ceci fonctionne, notre interface monitor doit être sur le même canl que la station à déauthentifier.
+
+```bash
+# -0 deauth
+# send 3 requests
+# -a AP MAC
+# -c client to deauth MAC
+sudo aireplay-ng -0 3 -a a6:dc:44:80:84:73 -c 14:4f:8a:2f:82:08 wlan1mon
+```
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
+> Le code utilisé par Aircrack est le 7: le client a tenté de transmettre des données avant d'être associé avec l'AP.
+>
+> ![](images/deauth_reason.png)
+>
+> https://www.aircrack-ng.org/doku.php?id=deauthentication
+> Nb: Il faut que notre interface soit sur la même fréquence (2.4GHz ou 5GHz) et le même channel que la cible
+
+
+
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+
+> Filtre d'affichage utilisé: `wlan.fc.type==0 && wlan.fc.subtype==12`
+>
+> Vu la durée restreinte de la capture, et comme ce ne sont pas des trames fréquentes, nous n'avons pas trouvé d'autres trames de déauthentification
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -100,15 +123,32 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
+> ![](images/deauth_script.png)
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+
+> Les codes 1 et 4 sont envoyés de l'AP vers la station. Ce sont des codes qui permettent à un AP de déconnecter des clients.
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
 
+> Les codes 5 et 8 sont envoyés de la STA vers l'AP. Ce sont des codes qui permettent au client d'informer l'AP de sa déconnexion volontaire.
+
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
+
+> Nous avons deux options pour faire ceci:
+>
+> 1. Envoyer un message de déauthentification à l'adresse de broadcast FF:FF:FF:FF:FF:FF. Celui-ci va adresser le paquet à toutes les STA du BSS
+> 2. Ecouter et capturer les adresses MAC de toutes les STA qui communiquent avec notre AP. Forger des trames de déauthentification pour chaque de STA.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
+> Le code 3 indique que l'AP s'est éteint et a par conséquent déauthentifié client.
+>
+> Le code 8 indique que la STA s'est associée à un autre AP de l'ESS et se déconnecte donc de l'AP courant.
+
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+> Cette attaque va déauthentifier le client du Wifi. Afin de pouvoir se reconnecter il doit resaisir la clé du Wifi. Le client continuera d'être déconnecté et invité à entrer la clé tant que le programme tourne. Il peut donc être utilisé comme déni de service ou pour capture un 4-way handshake complet.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
@@ -120,10 +160,33 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+> Cette attaque fait qu'une STA voit deux SSID de même nom apparaître dans sa liste de réseaux disponibles.
+>
+> * Il y a donc une chance qu'elle se connecte à un faux AP que nous aurions mis en place au lieu de se connecter à son AP légitime.
+> * Dans le cas d'une déauthentification, la STA va tenter une reconnexion automatique. Sur un réseau ouvert, il est possible que la reconnexion se fasse sur le faux AP
+>
+> ![](images/2-script.png)
+>
+> ![](images/fake_channel_result.png)
+
+
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+> Cette capture montre le fonctionnement du script avec une liste de SSIDs
+>
+> ![](images/ssid_flood_script.png)
+>
+> Cette capture montre le fonctionnement du script avec des SSIDs aléatoires
+>
+> ![](images/ssid_flood_random_script.png)
+>
+> Cette capture montre les SSID aléatoires visibles depuis un script de scanning des SSIDs visibles. Ces APs ne sont pas visibles sur nos ordinateurs, mais on peut les voir depuis les téléphones mobiles
+>
+> ![](images/ssid_flood_random_names.png)
+
 
 
 ## Partie 2 - probes
@@ -150,19 +213,29 @@ A des fins plus discutables du point de vue éthique, la détection de client s'
 ### 4. Probe Request Evil Twin Attack
 
 Nous allons nous intéresser dans cet exercice à la création d'un evil twin pour viser une cible que l'on découvre dynamiquement utilisant des probes.
- 
+
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+> Tout le monde peut lire ces trames car aucune connexion n'est établie avec l'AP comme ce dernier est inconnu.
+> De ce fait, on ne peut pas chiffrer car le destinataire ne saurait pas comment déchiffrer.
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+> Les appareils récents spoofent leurs adresses MAC à la volée ce qui fait qu'elle change régulièrement.
+> Comme c'est l'adresse MAC qui sert à tracer les dispositifs, il n'y a pas moyen de déterminer que 2 adresses MAC différentes correspondent en réalité au même appareil.
+
+
 
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+
+![5_1_illustration](images/5_1_illustration.png)
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -174,12 +247,19 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+![5_2_illustration](images/5_2_illustration.png)
+
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
 Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
+
+> Dans le cas d'un AP invisible, les trames de beacon sont toujours envoyées mais sans SSID.
+> On peut écouter le trafic environnant pour trouver les trames à destination d'un AP caché.
+>
+> Nous n'avons cependant pas fait le script.
 
 
 
@@ -209,4 +289,4 @@ Un fork du repo original . Puis, un Pull Request contenant :
 
 ## Échéance
 
-Le 15 mars 2023 à 23h59
+Le 2 avril 2023 à 23h59
