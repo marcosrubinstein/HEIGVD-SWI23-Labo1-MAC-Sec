@@ -89,15 +89,15 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-> Pour que ceci fonctionne, notre interface monitor doit être sur le même canl que la station à déauthentifier.
-
-```bash
-# -0 deauth
-# send 3 requests
-# -a AP MAC
-# -c client to deauth MAC
-sudo aireplay-ng -0 3 -a a6:dc:44:80:84:73 -c 14:4f:8a:2f:82:08 wlan1mon
-```
+> Pour que ceci fonctionne, notre interface monitor doit être sur le même canal que la station à déauthentifier.
+>
+> ```bash
+> # -0 deauth
+> # send 3 requests
+> # -a AP MAC
+> # -c client to deauth MAC
+> sudo aireplay-ng -0 3 -a a6:dc:44:80:84:73 -c 14:4f:8a:2f:82:08 wlan1mon
+> ```
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
@@ -164,7 +164,17 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+> Cette capture montre le fonctionnement du script avec une liste de SSIDs
+>
 > ![](images/ssid_flood_script.png)
+>
+> Cette capture montre le fonctionnement du script avec des SSIDs aléatoires
+>
+> ![](images/ssid_flood_random_script.png)
+>
+> Cette capture montre les SSID aléatoires visibles depuis un script de scanning des SSIDs visibles. Ces APs ne sont pas visibles sur nos ordinateurs, mais on peut les voir depuis les téléphones mobiles
+>
+> ![](images/ssid_flood_random_names.png)
 
 
 ## Partie 2 - probes
