@@ -88,6 +88,13 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
+`aireplay-ng -0 1 -a 00:0C:29:DD:8D:2A -c 00:0F:B5:34:30:30 eth0`
++ **-0** indique qu'il s'agit d'une désauthentification
++ **1** correspond au nombre de désauthentification à envoyer
++ **-a** indique l'adresse MAC de l'Access Point
++ **-c** indique l'adresse MAC du client à désauthentifier
++ **eth0** est le nom de l'interface réseau
+
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 TODO théorie
 
