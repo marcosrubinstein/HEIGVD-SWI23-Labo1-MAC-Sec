@@ -1,0 +1,49 @@
+wlp3s0    Scan completed :
+          Cell 03 - Address: 50:6F:0C:EC:2F:B9
+                    Channel:1
+                    Frequency:2.412 GHz (Channel 1)
+                    Quality=45/70  Signal level=-65 dBm
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 6 Mb/s
+                              9 Mb/s; 12 Mb/s; 18 Mb/s
+                    Bit Rates:24 Mb/s; 36 Mb/s; 48 Mb/s; 54 Mb/s
+                    Mode:Master
+                    Extra:tsf=000004b95adbdec2
+                    Extra: Last beacon: 7288ms ago
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+                    IE: WPA Version 1
+                        Group Cipher : TKIP
+                        Pairwise Ciphers (2) : CCMP TKIP
+                        Authentication Suites (1) : PSK
+          Cell 05 - Address: 50:6F:0C:EC:2F:B9
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=64/70  Signal level=-46 dBm
+                    Encryption key:on
+                    ESSID:"Sunrise_2.4GHz_EC2FB0"
+                    Mode:Master
+                    Extra:tsf=0000000000000000
+                    Extra: Last beacon: 7164ms ago
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : Proprietary
+                        Pairwise Ciphers (514) :
+          Cell 06 - Address: 50:E0:39:5E:6A:59
+                    Channel:7
+                    Frequency:2.442 GHz (Channel 7)
+                    Quality=30/70  Signal level=-80 dBm
+                    Encryption key:on
+                    ESSID:"yallo_5E6A59"
+                    Bit Rates:1 Mb/s; 2 Mb/s; 5.5 Mb/s; 11 Mb/s; 18 Mb/s
+                              24 Mb/s; 36 Mb/s; 54 Mb/s
+                    Bit Rates:6 Mb/s; 9 Mb/s; 12 Mb/s; 48 Mb/s
+                    Mode:Master
+                    Extra:tsf=000001798dc28484
+                    Extra: Last beacon: 6576ms ago
+                    IE: IEEE 802.11i/WPA2 Version 1
+                        Group Cipher : CCMP
+                        Pairwise Ciphers (1) : CCMP
+                        Authentication Suites (2) : PSK unknown (8)
