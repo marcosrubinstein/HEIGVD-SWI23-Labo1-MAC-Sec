@@ -128,6 +128,8 @@ Code 7 : Reason code: Class 3 frame received from nonassociated STA (0x0007)
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
 
+Réponse : 
+
 Les deux filtres suivantes permettent de trouver les trames de
 desauthentification avec Wireshark :
 
@@ -165,7 +167,7 @@ Wireshark :
 Une capture Wireshark pendant le fonctionnement du script indique que les trames
 de dèsauthentification sont bien envoyées :
 
-![Capture Wireshark](images/1_script_res.png)
+![Capture Wireshark](images/1_script_wireshark.png)
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
