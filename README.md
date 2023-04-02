@@ -89,9 +89,17 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
  
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
 
-__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
+*Utilisation du script*
 
-__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+![img.png](images/img.png)
+
+__Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?  
+- 0x7 : Class 3 frame received from nonassociated station
+- On spoof l'AP (grâce à son adresse MAC) en envoyant le code précédent. Normalement un AP envoie ce message s'il reçoit une frame de data de la part d'une STA non connectée.
+
+__Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?  
+- Filtre : `(wlan.bssid == 76:53:e3:9d:42:51) && (wlan.fc.type_subtype == 0x000c)`
+- On a pu voir qu'ils avaient tous le même code car on envoie une dizaine de paquets du même type
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -100,15 +108,39 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
+__Question__ : quels codes/raisons justifient l'envoi de la trame à la STA cible et pourquoi ?
 
-__Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+Les codes 1, 4 et 5.
+
+- Code 1 Unspecified : Comme la raison n'est pas spécifiée, cette trame peut être destinée à l'AP ou à la STA.
+- Code 4 Disassociated due to inactivity : L'AP déconnecte la station car la station est inactive. Donc cette trame va à la station.
+- Code 5 Disassociated because AP is unable to handle all currently associated stations : L'AP déconnecte la station car il n'a pas assez de ressources pour gérer toutes les stations. Donc cette trame va à la station.
+
+
+
+__Question__ : quels codes/raisons justifient l'envoi de la trame à l'AP et pourquoi ?
+
+- Code 1 Unspecified : Comme la raison n'est pas spécifiée, cette trame peut être destinée à l'AP ou à la STA.
+- Code 8 Deauthenticated because sending STA is leaving BSS : La station se déconnecte de l'AP car elle quitte le réseau. Donc cette trame va à l'AP.
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
+On peut spécifier une adresse de broadcast pour l'adresse de destination de la trame, avec par exemple le code 4 ou 5.
+
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
+Le code 3 signifie que la station quitte l'IBSS ou l'ESS.
+Un IBSS est un réseau en mode AD hoc. Un ESS est un réseau en mode infrastructure qui peut être composé de plusieurs BSS.
+Donc avec le code 3, la station quitte vraiment le réseau.
+
+Le code 8 signifie que la station quitte le BSS. Donc la station se déconnecte de l'AP mais peut rester dans l'IBSS.
+
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+Dans le cas d'un paquet de deauthentication envoyé à la station, la station croit qu'elle a été déconnectée de l'AP.
+Dans le cas d'un paquet de deauthentication envoyé à l'AP, l'AP croit que la station s'est déconnectée.
+
+Dans les deux cas, la station est déconnectée du réseau.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
@@ -120,11 +152,29 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
+La victime va se connecter à notre AP en pensant que c'est l'AP légitime car elle a le même SSID.
+On pourra donc voir tout le traffic de la victime et potentiellement voler des informations sensibles.
+
+Si la communication entre la victime et le serveur est sécurisée, on ne peut rien voler.
+Cependant on pourrait imaginer plusieurs attaques de l'homme dans le milieu, par exemple une attaque par DNS spoofing où l'on redirige la victime vers un serveur malicieux.
+
+Avant l'attaque, le Wifi n'a pas une bonne portée :
+![Avant](images/2_a.png)
+
+Après l'attaque, le Wifi a été créé (depuis le dongle) et a une bonne portée (vision de la machine hôte) :
+![Après](images/2_b.png)
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+Exemple de la flood attack avec des SSIDs randoms
+![flood attack 1](images/3_a.png)
+![flood attack 2](images/3_b.png)
+
+Exemple de la flood attack avec une liste de 3 SSIDs
+![flood attack 3](images/3_c.png)
+![flood attack 4](images/3_d.png)
 
 ## Partie 2 - probes
 
@@ -155,14 +205,25 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
+*Utilisation du script*
+![img_1.png](images/img_1.png)
+
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+Ces trames sont faites pour être envoyées alors que la connexion entre l'AP et la STA n'est pas encore établie. Donc elles ne peuvent pas être chiffrées.	
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+D'une part sur les téléphones récents l'adresse MAC utilisée est aléatoire.
+
+D'autre part, les téléphones récents n'envoient plus de probe request spontanément. Par exemple mon téléphone (Android 12) n'envoie pas de probe request la plupart du temps. C'est seulement quand j'effectue manuellement une recherche de wifi que le téléphone envoie un probe request.
 
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+
+![sta ap 1](images/5_a.png)
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -174,6 +235,7 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+![sta ap 1](images/5_b.png)
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
@@ -181,7 +243,15 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
+Pour résoudre ce problème, je scan le réseau et j'enregistre toutes les trames de type Beacon et Probe Response.
+Le réseau invisible va s'annoncer avec des 0x00 dans le nom du SSID.
+Afin de le démasquer, il faut qu'une station se connecte à l'AP invisible.
 
+Mon script va scanner et filtrer les trames de type Beacon et Probe Response et récupérer les trames Beacon des réseaux invisibles.
+Ensuite, il vérifie que l'adresse MAC (source) de l'AP invisible et l'adresse MAC (destination) de la Probe Response est la même.
+Si c'est le cas, alors on peut récupérer le SSID stocké dans la Probe Request.
+
+![Exemple d'utilisation](images/6_unhide.png)
 
 ## Livrables
 
@@ -209,4 +279,4 @@ Un fork du repo original . Puis, un Pull Request contenant :
 
 ## Échéance
 
-Le 15 mars 2023 à 23h59
+Le 2 avril 2023 à 23h59
