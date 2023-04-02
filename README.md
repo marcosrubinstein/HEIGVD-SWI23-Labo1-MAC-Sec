@@ -153,6 +153,20 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
+
+Script : scripts/1_deauthenticate.py
+
+Résultat script :
+
+![Résultat script](images/1_script_res.png)
+
+Wireshark : 
+
+Une capture Wireshark pendant le fonctionnement du script indique que les trames
+de dèsauthentification sont bien envoyées :
+
+![Capture Wireshark](images/1_script_res.png)
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
 Code 1 : raison = non spécifiée
