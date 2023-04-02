@@ -97,7 +97,7 @@ a) Utiliser la fonction de déauthentification de la suite aircrack, capturer le
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?  
 Il s'agit du code 7 : Class 3 frame received from nonassociated station  
-Ce message signifie que le point d'accès à reçu une trame d'une station qui n'est pas associée à cet AP, donc qui n'est pas autorisée à communiquer.
+Ce message signifie que le point d'accès a reçu une trame d'une station qui n'est pas associée à cet AP, donc qui n'est pas autorisée à communiquer.
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?<br />  
 `wlan.fc.type_subtype == 0x0c`  
@@ -132,23 +132,25 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible.<br /><br />
 Dans tous les cas cette attaque a pour effet de déconnecter du réseau wifi la station à qui appartient l'adresse MAC fournie. Le reason code n'aura pas d'effet direct sur l'utilisateur mais il sera obligé de se reconnecter pour pouvoir à nouveau accéder au réseau.  
 Dans le cas où l'adresse MAC de broadcast est utilisée, c'est bien toutes les machines du réseau qui se feront déconnecter.
 
-### 2. Fake channel evil tween attack
+### 2. Fake channel evil twin attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
 * Dresser une liste des SSID disponibles à proximité
 * Présenter à l'utilisateur la liste, avec les numéros de canaux et les puissances
 * Permettre à l'utilisateur de choisir le réseau à attaquer
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
+	
+*Le script se trouve dans ce [fichier](scripts/evil-twin.py).*
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
+__Question__ : Expliquer l'effet de cette attaque sur la cible<br /><br />
 Cette attaque aura pour effet de déconnecter tous les utilisateurs du SSID donné car ils essaieront de communiquer avec un AP qui n'existe pas.
 
 
 ### 3. SSID flood attack
 
-Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier texte fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
-TODO : Script
+*Le script se trouve dans ce [fichier](scripts/ssid-flood.py).*
 
 
 ## Partie 2 - probes
