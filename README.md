@@ -177,15 +177,18 @@ A des fins plus discutables du point de vue éthique, la détection de client s'
 Nous allons nous intéresser dans cet exercice à la création d'un evil twin pour viser une cible que l'on découvre dynamiquement utilisant des probes.
  
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
-TODO : Script
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
-TODO : Théorie
+Le principal risque de cette requête est le suivi d'une personne.
+Aucun lien n'est encore établi entre l'AP et la STA. Il est donc impossible d'avoir un secret éphémère partagé entre les deux.
+Les requêtes devraient donc être chiffrées à l'aide d'un secret commun, le mot de passe du wifi par exemple, qui rendrait la requête chiffrée mais déterministe.
+Ainsi, les requêtes étant toujours les même, il serait toujours possible de suivre la personne.
 
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
-TODO : Théorie
+Le suivi se fait principalement par l'adresse MAC annoncée par la STA. Les appareils récents utilisent à ce moment une MAC aléatoire à chaque requête, il n'est donc plus possible de corréler les déplacements de l'utilisateur.
+Il serait cependant toujours possible de faire une forme de suivi en corrélant la liste des stations annoncées. Cependant, dans une zone très fréquentée, cette liste serait telle qu'il ne serait plus vraiment possible de faire une tel suivi.
 
 ### 5. Détection de clients et réseaux
 
