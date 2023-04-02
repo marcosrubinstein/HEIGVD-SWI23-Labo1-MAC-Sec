@@ -102,15 +102,16 @@ Ce message signifie que le point d'accès à reçu une trame d'une station qui n
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?<br />  
 `wlan.fc.type_subtype == 0x0c`  
 Ce filtre permet d'afficher tous les paquets de type/subtype 0x0c. Comme nous l'avons vu dans la première question, le type 0 correspond aux paquets de désauthentification.<br />  
-En observant le réseau aucun autre paquet n'est apparut. Cela paraît logique car notre réseau ne comporte que l'appareil que nous avons éjecté ainsi et la vm kali linux. Si nous étions sur un réseau comportant d'autres machines, nous verrions potentiellement d'autres appareils se déconnecter.
+En observant le réseau aucun autre paquet de désauthentification n'est apparut. Cela paraît logique car notre réseau ne comporte que l'appareil que nous avons éjecté ainsi et la vm kali linux. Si nous étions sur un réseau comportant d'autres machines, nous verrions potentiellement d'autres appareils se déconnecter.
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
-**TODO : Script**
 
 * 1 - Unspecified
 * 4 - Disassociated due to inactivity
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
+
+*Le script se trouve dans ce [fichier](scripts/deauth.py).*
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 TODO : Théorie
