@@ -22,10 +22,11 @@ print("8 - Deauthenticated because sending STA is leaving BSS")
 
 reason_code = int(input("Indiquez le numéro [1-4-5-8] : "))
 
-if reason_code == 1 or reason_code == 4:
+# Techniquement le reason code 1 pourrait être envoyé dans les deux sens mais nous avons fait le choix de l'envoyer de l'AP au STA.
+if reason_code == 1 or reason_code == 4 or reason_code == 5:
     dest = target_mac
     src = ap_mac
-elif reason_code == 5 or reason_code == 8:
+elif reason_code == 8:
     dest = ap_mac
     src = target_mac
 else:
