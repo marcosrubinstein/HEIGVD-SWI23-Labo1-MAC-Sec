@@ -52,7 +52,7 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 | 0    | Reserved                                                                                                                                              |
 | 1    | Unspecified reason                                                                                                                                    |
 | 2    | Previous authentication no longer valid                                                                                                               |
-| 3    | station is leaving (or has left) IBSS or ESS                                                                                                          |
+| 3    | Station is leaving (or has left) IBSS or ESS                                                                                                          |
 | 4    | Disassociated due to inactivity                                                                                                                       |
 | 5    | Disassociated because AP is unable to handle all currently associated stations                                                                        |
 | 6    | Class 2 frame received from nonauthenticated station                                                                                                  |
@@ -125,11 +125,12 @@ __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et po
 __Question__ : Comment essayer de déauthentifier toutes les STA ?<br /><br />
 Il est indiqué dans [la documentation](https://www.aircrack-ng.org/doku.php?id=deauthentication) de Aircrack-ng que si nous ne précisons pas de client avec l'attribut **-c**, tous les clients seront désauthentifiés. Dans le cadre de notre script, nous pouvons utiliser l'adresse de broadcast. Il s'agit de `FF:FF:FF:FF:FF:FF`.
 
-__Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
-TODO : Théorie
+__Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?<br /><br />
+La différence est que dans le cas du code 3 la station est entrain ou a quitté l'ESS alors que dans le code 8 il s'agit du BSS. La différence entre ces deux types de réseaux est que le BSS (Basic Service Set) est un réseau sans fil composé d'un seul point d'accès, tandis que l'ESS (Extended Service Set) est un réseau sans fil composé de plusieurs BSS connectés entre eux via un même réseau.
 
-__Question__ : Expliquer l'effet de cette attaque sur la cible
-TODO : Théorie
+__Question__ : Expliquer l'effet de cette attaque sur la cible.<br /><br />
+Dans tous les cas cette attaque a pour effet de déconnecter du réseau wifi la station à qui appartient l'adresse MAC fournie. Le reason code n'aura pas d'effet direct sur l'utilisateur mais il sera obligé de se reconnecter pour pouvoir à nouveau accéder au réseau.  
+Dans le cas où l'adresse MAC de broadcast est utilisée, c'est bien toutes les machines du réseau qui se feront déconnecter.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
