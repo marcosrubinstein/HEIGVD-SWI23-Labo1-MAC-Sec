@@ -13,7 +13,7 @@ def handle_packet(pkt):
         ssid = pkt.getlayer(Dot11Elt).info.decode()  # Retrieve SSID
         if ssid == ssid_target:  # If it's the target
             if pkt.haslayer(Dot11):  # Check if the Dot11 is included
-                printf(pkt.addr2)  # Show the STA's MAC
+                print(pkt.addr2)  # Show the STA's MAC
 
 
 sniff(iface=ifname, prn=handle_packet)
