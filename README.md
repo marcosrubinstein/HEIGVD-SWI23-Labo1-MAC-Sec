@@ -263,12 +263,41 @@ Nous allons nous intéresser dans cet exercice à la création d'un evil twin po
  
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
 
+Réponse:
+
+Script: scripts/4_evil_twin_prb_req.python
+
+Exécution du script:
+
+Le script détecte bien une probe request et démarre le Evil Twin.
+
+![Lancement du script](images/4_script_res_1.png)
+
+Notre antenne détecte les trames taratata.
+
+![Frames visibles](images/4_script_res_2.png)
+
+Le téléphone détecte aussi le SSID.
+
+![SSID visible sur téléphone](images/4_script_res_3.png)
+
+
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+Parce qu'elles doivent être lisibles par les APs à proximité alors que la
+connexion avec la STA n'est pas encore établie. Si elles étaient chiffrées, elles ne
+pourraient pas être lue et aucun AP ne pourrait y répondre. 
+
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
 
+Les versions récentes de iOS et Android génèrent des adresses MAC aléatoires
+utilisées notamment dans les trames de probe request. Ils sont donc une adresse
+aléatoire pour chaque SSID, cela complique fortement le traçage. D'autant plus
+que les appareils récents n'envoient pas souvent de probe request (observation
+faite pendant nos tests).
 
 ### 5. Détection de clients et réseaux
 
