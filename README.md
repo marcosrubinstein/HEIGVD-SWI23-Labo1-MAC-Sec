@@ -128,12 +128,46 @@ Code 7 : Reason code: Class 3 frame received from nonassociated STA (0x0007)
 
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
 
+Réponse : 
+
+Les deux filtres suivantes permettent de trouver les trames de
+desauthentification avec Wireshark :
+
+Affiche uniquement les trames de management (type 0) avec comme sous type les
+trames de desauthentification (subtype 12) :
+```
+wlan.fc.type==0 && wlan.fc.subtype==12
+```
+
+Affiche uniquement les trames avec comme un code de raison différent de 0x0007 :
+
+```
+wlan.fixed.reason_code != 0x0007
+```
+
+Nous n'avons pas trouvé d'autres trames de desauthentification pendant nos
+différentes captures.
+
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
 * 1 - Unspecified
 * 4 - Disassociated due to inactivity
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
+
+
+Script : scripts/1_deauthenticate.py
+
+Résultat script :
+
+![Résultat script](images/1_script_res.png)
+
+Wireshark : 
+
+Une capture Wireshark pendant le fonctionnement du script indique que les trames
+de dèsauthentification sont bien envoyées :
+
+![Capture Wireshark](images/1_script_wireshark.png)
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
@@ -152,7 +186,7 @@ En utilisant `FF:FF:FF:FF:FF:FF` comme adresse de station.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
-Le code 3 spécifie que la désauthntification a lieu parce que l'AP a reçu une trame de
+Le code 3 spécifie que la désauthentification a lieu parce que l'AP a reçu une trame de
 désauthentification de la station alors que le code 8 parce que la station
 quitte le réseau. Dans le code 3, la désauthentification est donc initiée par
 l'AP suite à une requête de la station alors que dans le code 8, la
