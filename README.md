@@ -195,7 +195,6 @@ Il serait cependant toujours possible de faire une forme de suivi en corrélant 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
-TODO : Script
 
 STAs &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; APs
 
