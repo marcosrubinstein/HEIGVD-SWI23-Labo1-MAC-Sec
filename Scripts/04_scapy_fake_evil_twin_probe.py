@@ -56,7 +56,7 @@ def create_evil_twin(ssid, interface):
         print("Evil twin terminated.")
 
 
-def main(monitor_interface):
+def main(interface):
     set_monitor_mode(interface)
     print("Scanning for devices trying to connect to any SSID...")
 
