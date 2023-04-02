@@ -155,7 +155,7 @@ Développer un script en Python/Scapy capable d'inonder la salle avec des SSID d
 
 ## Partie 2 - probes
 
-## Introduction
+### Introduction
 
 L’une des informations de plus intéressantes et utiles que l’on peut obtenir à partir d’un client sans fils de manière entièrement passive (et en clair) se trouve dans la trame ``Probe Request`` :
 
@@ -210,10 +210,16 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
 Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".
-TODO : Script
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
-TODO : Théorie
+Je propose ici deux techniques :
+1. Deauth
+   - Je commence par lister les AP avec un SSID hidden
+   - J'essaie ensuite de lister les STA associées à cet AP
+   - Ensuite, j'envoie un deauth aux STA listées
+   - Je finis par sniffer les reconnexions en espérant entendre le SSID
+2. Selon internet, une ProbeReq avec un SSID vide fait que les AP avec un SSID hidden s'annoncent
+   - Je doute de cette technique, mais autant la tester 
 
 ## Livrables
 
