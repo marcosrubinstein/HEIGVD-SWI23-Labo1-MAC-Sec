@@ -134,7 +134,6 @@ Dans le cas où l'adresse MAC de broadcast est utilisée, c'est bien toutes les 
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
-TODO : Script
 
 * Dresser une liste des SSID disponibles à proximité
 * Présenter à l'utilisateur la liste, avec les numéros de canaux et les puissances
@@ -142,7 +141,7 @@ TODO : Script
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
-TODO : Théorie
+Cette attaque aura pour effet de déconnecter tous les utilisateurs du SSID donné car ils essaieront de communiquer avec un AP qui n'existe pas.
 
 
 ### 3. SSID flood attack
