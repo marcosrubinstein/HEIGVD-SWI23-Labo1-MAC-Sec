@@ -135,8 +135,7 @@ Le code 8 : Il est envoyé à l'AP car la STA quitte le réseau (BSS). Il est ut
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
-En envoyant un packet `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
-**TODO**
+En envoyant une trame de deauth `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 

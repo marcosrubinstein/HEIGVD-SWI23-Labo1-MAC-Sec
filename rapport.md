@@ -52,7 +52,7 @@ Le code 8 : Il est envoyé à l'AP car la STA quitte le réseau (BSS). Il est ut
 
 ***Comment essayer de déauthentifier toutes les STA ?***
 
-En envoyant un packet `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
+En envoyant une trame de deauth `Broadcast` (FF:FF:FF:FF:FF:FF) à l'adresse de l'AP.
 
 ### Question 6
 
@@ -82,6 +82,7 @@ Nous avons fait quelques tests avec un partage de connexion Android (AndroidAP),
 ![Evil Tween](./images/evil_tween_shark.png)
 
 ## SSID flood attack
+
 ***Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.***
 
 Le script est disponible [ici](./customScripts/SSID_flood.py). On peut soit passer un fichier txt contenant un nom par ligne, soit utiliser le script sans liste. A ce moment l'utilisateur doit entrer un nombre d'AP à créer, les noms et adresses MAC sont générés aléatoirement à l'aide de la librairie Faker de python (https://faker.readthedocs.io/en/master/#basic-usage)
@@ -102,18 +103,27 @@ Exemple de fonctionnement sans liste de noms fournie par l'utilisateur.
 
 ***Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
+Exemple du fonctionnement du script (disponible [ici](./customScripts/probe_evil.py)).
+
+Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
+
 ![Exemple du fonctionnement du script](images/probe_evil.png)
 	
 Afin de montrer le bon fonctionnement du script, le "faux réseau" créé lors de la détection de probe-request cherchant le SSID "AndroidAP" est nommé AndroidAPfaked. Il est évident que dans le cas d'une réelle attaque, le nom du "faux réseau" doit être le même que le vrai.
 On voit sur la capture d'écran que des Probe Requests sont envoyées à la recherche du SSID "AndroidAP". A ce moment, on peut voir que le faux réseau (AndroidAPfaked) est créé à droite dans la liste des wifis détectés par une machine Windows.
 
-### Question : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+\newpage
+
+### Question 1
+
+***Comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?***
 	
 Ces trames doivent être envoyées en clair car elles sont utilisées par les clients afin de rechercher activement des réseaux.
 Si les trames probes étaient chiffrées, les points d'accès ne pourraient pas lire le contenu et ne pourraient donc répondre avec des probes responses.
 
-### Question : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+### Question 2
+
+***Pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?***
 
 Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pour les trames probes. Par conséquent on aurait beaucoup plus de peine à les tracer puisqu'on ne pourrait plus comparer les adresses MAC.
 
@@ -121,16 +131,36 @@ Les appareils iOS et Android récents utilisent des adresses MAC aléatoires pou
 
 ***Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
+Exemple du fonctionnement du script (disponible [ici](./customScripts/stationsLister.py)).
+
+Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
 	
 ![Exemple du fonctionnement du script](images/stationsLister.png)
 	
 Le script liste simplement les stations qui recherchent le SSID "AndroidAP".
 
+\newpage
+
 ***Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP.***
 
-Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)). Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
+Exemple du fonctionnement du script (disponible [ici](./customScripts/showLinkedSTAtoAP.py)). 
+
+Notes: l'interface pour sniffer les paquets est "wlan0". Il peut être nécessaire de la changer dans le script dans le cas où l'interface serait wlan0mon.
 	
 ![Exemple du fonctionnement du script](images/linksStationsAndAPs.png)
 	
 Le script liste les stations et l'AP auxquelles ces dernières sont connectées.
+
+## Bonus - Hidden SSID Reveal
+
+***Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".***
+
+Script disponible [ici](./customScripts/hidden_ap.py).
+
+\newpage
+
+### Question 1
+
+***Expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?***
+
+Basiquement, quand un AP est configuré pour ne pas diffuser son SSID il émet des beacons avec un SSID vide. On peut donc dans un premier temps monitorer le traffic sans-fils, capturé les beacons qui on ce champs SSID vide. On récupère alors l'adresse MAC de l'AP. Ensuite on deauth les clients qui sont connectés à cet AP. Les clients vont alors essayer de se reconnecter à l'AP. Lors de cette reconnection, les STA vont envoyer des probe requests avec le SSID de l'AP. On peut donc capturer ces trames et récupérer le SSID de l'AP.
