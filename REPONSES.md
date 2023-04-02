@@ -73,3 +73,27 @@ Le vrai :
 
 Le faux:
 ![Fake](images/02_fake_evil_twin_fake.png)
+
+### 3. SSID flood attack
+
+Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+## Partie 2 - probes
+
+### 4. Probe Request Evil Twin Attack
+
+Nous allons nous intéresser dans cet exercice à la création d'un evil twin pour viser une cible que l'on découvre dynamiquement utilisant des probes.
+ 
+Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
+
+Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
+
+__Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
+
+Les trames Wi-Fi sont envoyées en clair (non chiffrées) par défaut car le Wi-Fi a été initialement conçu pour fournir un accès sans fil pratique à un réseau local, et non pour une sécurité de bout en bout. Cependant, il est possible de chiffrer les trames Wi-Fi en utilisant des protocoles tels que WPA2-PSK ou WPA2-Enterprise.
+
+__Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+Les dispositifs iOS et Android récents ne peuvent plus être tracés avec cette méthode car ils ont implémenté des mesures de protection de la vie privée qui limitent la diffusion de leur adresse MAC.
+
+Par exemple, depuis iOS 8, Apple utilise une adresse MAC aléatoire pour les balayages Wi-Fi, sauf si l'utilisateur a explicitement autorisé une application à utiliser l'adresse MAC réelle. De même, à partir d'Android 6.0 (Marshmallow), Google a introduit une fonctionnalité appelée "Mac Randomization" qui génère également des adresses MAC aléatoires pour les balayages Wi-Fi, sauf si l'utilisateur a explicitement autorisé une application à utiliser l'adresse MAC réelle.
