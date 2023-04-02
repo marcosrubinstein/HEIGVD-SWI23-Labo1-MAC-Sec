@@ -122,8 +122,8 @@ __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et po
 - **Le code 1** peut être envoyé à l'AP, permet au STA de se déconnecter sans spécifier de raison.
 - **Le code 8** est envoyé à l'AP, il l'enforme que l'utilisateur a décidé de déconnecter volontairement sa machine du réseau.
 
-__Question__ : Comment essayer de déauthentifier toutes les STA ?
-TODO : Théorie
+__Question__ : Comment essayer de déauthentifier toutes les STA ?<br /><br />
+Il est indiqué dans [la documentation](https://www.aircrack-ng.org/doku.php?id=deauthentication) de Aircrack-ng que si nous ne précisons pas de client avec l'attribut **-c**, tous les clients seront désauthentifiés. Dans le cadre de notre script, nous pouvons utiliser l'adresse de broadcast. Il s'agit de `FF:FF:FF:FF:FF:FF`.
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 TODO : Théorie
