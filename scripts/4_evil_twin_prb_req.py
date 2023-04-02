@@ -53,7 +53,7 @@ def evil_twin(pkt):
 
 def main():
 
-    # Snif les paquets pour détecter les AP
+    # Sniff les paquets pour détecter les AP
     print("Sniffing en cours...")
     sniff(timeout=30, iface=args.i, prn = pkt_handler)
     if ssid_found == False:
