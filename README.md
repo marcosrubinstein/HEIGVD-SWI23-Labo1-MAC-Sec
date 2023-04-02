@@ -114,10 +114,13 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 *Le script se trouve dans ce [fichier](scripts/deauth.py).*
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
-TODO : Théorie
+- **Le code 1** peut être envoyé au STA, permet à l'AP de déconnecter un appareil sans avoir à spécifier de raison.
+- **Le code 4** est envoyé au STA, il permet à l'AP de déconnecter un appareil après une inactivité prolongée de sa part.
+- **Le code 5** est envoyé au STA, il permet à l'AP de déconnecter un appareil lorsqu'il n'arrive plus supporter la charge actuelle.
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
-TODO : Théorie
+- **Le code 1** peut être envoyé à l'AP, permet au STA de se déconnecter sans spécifier de raison.
+- **Le code 8** est envoyé à l'AP, il l'enforme que l'utilisateur a décidé de déconnecter volontairement sa machine du réseau.
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 TODO : Théorie
