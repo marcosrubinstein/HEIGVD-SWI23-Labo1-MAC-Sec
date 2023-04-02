@@ -33,7 +33,6 @@ else:
     print("Le code n'existe pas")
     sys.exit()
 
-print(reason_code)
 # Créer une trame de désauthentification
 pkt = RadioTap() / Dot11(addr1=dest, addr2=src, addr3=ap_mac) / Dot11Deauth(reason=reason_code)
 
