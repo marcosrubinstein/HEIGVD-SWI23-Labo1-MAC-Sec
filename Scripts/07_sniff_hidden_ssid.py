@@ -1,6 +1,8 @@
 import os
 import sys
 from scapy.all import *
+from tabulate import tabulate
+
 
 # Initialize an empty set to store hidden SSIDs
 hidden_ssids = set()
@@ -55,13 +57,25 @@ def main():
     print("Sniffing for hidden SSIDs...")
     try:
         # Start sniffing and pass captured packets to the packet_handler function
-        sniff(iface=monitor_interface, prn=packet_handler)
+        sniff(iface=monitor_interface, prn=packet_handler, timeout=10)
     except KeyboardInterrupt:
         # Handle the KeyboardInterrupt (Ctrl+C) and print the results
         print("\nStopped sniffing.")
         print("Hidden SSIDs found:")
         for ssid in hidden_ssids:
             print(f"- {ssid}")
+
+    # Print the results
+    print("\nSniffing completed.")
+    print("Hidden SSIDs found:")
+    
+    # Create a table with the hidden SSIDs
+    table_data = [[i + 1, ssid] for i, ssid in enumerate(hidden_ssids)]
+    table_headers = ["#", "SSID"]
+    table = tabulate(table_data, headers=table_headers, tablefmt="pretty")
+    
+    # Print the table
+    print(table)
 
 if __name__ == "__main__":
     main()

